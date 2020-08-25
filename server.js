@@ -10,7 +10,7 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: false}));
 
 app.get('/', async (req, res) =>{
-const shorturls = await shorturl.find();
+const shorturls = await shorturl.find().sort({clicks: -1});
 res.render('index', {shorturls: shorturls});
 });
 
