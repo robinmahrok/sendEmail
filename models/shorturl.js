@@ -18,4 +18,5 @@ clicks: {
 }
 });
 
+
 module.exports = mongoose.model("ShortUrl", shortUrlSchema);
