@@ -1,75 +1,40 @@
 // All the app configuration values should be added here.
 
 //const { notification: { authorization } } = require('../secret')
-
+const googleAuth = require('google-auth-library');
+const Credentials = require('google-auth-library/build/src/auth/credentials');
 module.exports = {
-    // apiVersion: `v1`,
-    // server: `dev`,
-    // host: `https://localhost`,
-    // dev: {
-    //     host: `http://localhost`,
-    //     port: 4000,
-    //     chatPort: 4015
-    // },
-    
-    dbURL: `mongodb+srv://root:Lj7x2158V1aA2UQG@cluster0.uyjet.mongodb.net/urlShortner?retryWrites=true&w=majority`
-//mongodb+srv://panchpandav:5%40Pandav@cluster1.0t0gm.mongodb.net/Users?retryWrites=true&w=majority
-    // // Pagination
-    // pagination: {
-    //     posts: {
-    //         skipDefault: 0,
-    //         limitDefault: 20
-    //     }
-    // },
+    // OAuth credentails common for mailer functionality
+    credentials: {
+        web: {
+            client_id: "654842763273-nnafghpgq5dh4qk6q5m5pmj8re1s18l3.apps.googleusercontent.com",
+            project_id: "yaass-286018",
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_secret": "5bCNF9yE4-CxONwDIEaPw6oX",
+            "redirect_uris": ["http://localhost:3005"],
+            "javascript_origins": ["http://localhost:3005"]
+        }
+      },
 
-    // // AWS
-    // s3: {
-    //     bucket: 'yaassdev',
-    //     uploadDirectoryPath: {
-    //         s3Moments: 'media/moments',
-    //         s3Buckets: 'media/buckets',
-    //         s3Posts: 'media/posts',
-    //         s3Users: 'media/users',
-    //         s3Places: 'media/places'
-    //     }
-    // },
+    // OAuth token common for mailer functionality
+    token: {
+        access_token: 'ya29.a0AfH6SMCDuIGafpxvzGH1SoK-StX_6cO8U7cBv1znvdmL_rLgb3qb6Uwj1pN4xRMrjtdwPbhJYAfsQZIGQ9gaw_T5ULu1nJPQhhl0f0aMOnZkh0zIisk3atv4IJBbI_pAtbuYsAoC-6yljeW88sXcOEwWYkOZQJPfoL0',
+        refresh_token: '1//0gn7xz9dP7UVICgYIARAAGBASNwF-L9IrH699W1FMIqDB1RmhIMK0AXG7I3y9eqECzsia_uUctJBOSFHZK2IujGP5mwqSPLJHt5M',
+        scope: 'https://mail.google.com/',
+        token_type: 'Bearer',
+        expiry_date: 1597339801516
+      },
 
-    // // Winston config
-    // logDir: 'logs',
-    // winstonErrorFile: 'log/error.log',
-    // winstonDatePattern: 'yyyy-MM-dd',
-    // winstonLevel: {
-    //     info: 'info',
-    //     error: 'error',
-    //     debug: 'debug',
-    //     warn: 'warn'
-    // },
+    dbURL: `mongodb+srv://panchpandav:5%40Pandav@cluster1.0t0gm.mongodb.net/Users?retryWrites=true&w=majority`,
 
-    
-    // apiKey: {
-    //     iOS: `3B54461F0834453699BE11C6A8676D1E`,
-    //     Android: `93782BC677984979BBB001EC183CD11E`
-    // },
 
-    // paginationDefaults: {
-    //     skip: 0,
-    //     limit: 100
-    // },
 
-    // notificationsConfig: {
-    //     fcmUrl: 'https://fcm.googleapis.com/fcm/send',
-    //     apiHeaders: {
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //             Authorization: authorization
-    //         }
-    //     },
-    // },
-
-    // excludedRoutes: [
-    //     `/shorturl`
-       
-    // ],
+    excludedRoutes: [
+        `/shorturl`,
+       `/loginRoutes`
+    ],
 
 
 
