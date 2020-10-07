@@ -4,8 +4,9 @@ const studentInfo = require('../models/studentInfo');
 var saltRounds = 10;
 var crypto = require('crypto'); 
 var mailer = require('../functions/mailer');
+const { models } = require('mongoose');
 router = express.Router();
-  router.use(express.urlencoded({extended: false}));
+  
   router.get('/', async (req, res) =>{
     const shorturls = await shorturl.find().sort({clicks: -1});
     res.render('index');
@@ -65,16 +66,12 @@ sendOTP( email,otpVal, (err, updatedUser) => {
 
 
 const sendOTP = ( recipient, otpVal, callback) => {
-           //generate Otp
- 
-const em={Email : recipient};
-const ot={Otp: otpVal};
     mailer({
         email: recipient,
        otpVal
       }, result => {
         if (result && result.status == 1000) {
-            studentInfo.findOneAndUpdate({ em },{ ot } , { new: true });
+            console.log("Otp Sent!");
          
         } else {
           callback("Unable to send OTP through email", null)
@@ -82,99 +79,120 @@ const ot={Otp: otpVal};
       });
     
   }
+var globalEmail="";
 
+//send and update otp in database api
+router.post('/sendOtp',(req,res) =>{
+    var email = req.body.email
+globalEmail=email;
 
-//otp verify api
-
-router.post('/otpverify',(req,res) =>{
-    var { body: { email, otp } } = req;
-    const conditions = [{ email }, { otp }]
-    if (isSignup) {
-      conditions.push({ otpVerify: "Pending" })
-    } else {
-      conditions.push({ otpVerify: "Verified" })
+   if (req.body.email == null || typeof req.body.email == undefined || req.body.email.length == 0 ) 
+   {
+        res.status(400).send({ status: false, message: "Email is missing, Please enter." });
     }
-    models.register.find({ $and: conditions },
-      function (err, users) {
-        if (err) {
-          res.status(400).send({
-            status: false,
-            message: "Error while getting user details",
-          });
-        }
-        else {
-          if (users.length != 0) {
-            let user = users[0]
-            // Upsert new device token
-            models.userToken.setUserToken(user._id, deviceToken, (err, token) => {
+
+    studentInfo.getUserByEmail(email, (err, user) => {
+        if (err || !user) {
+          res.status(400).send({ status: false, message: "User not found" });
+        } else {
+         
+            function  genOTP (min, max)  {
+                return Math.floor(min + Math.random() * max);
+              }
+            
+            var otpVal=genOTP(100000, 900000);
+            sendOTP( email, otpVal, (err) => {
               if (err) {
                 res.status(400).send({
                   status: false,
-                  message: "Error while storing device token",
+                  message: err,
                 });
-              } else {
-                // To get JWT token based user Data
-                const token = getLoginToken({
-                  _id: user._id,
-                  firstName: user.firstName,
-                  lastName: user.lastName,
-                  name: user.name,
-                  email: user.email,
-                  date: Date.now()
-                })
-                if (isSignup) {
-                  models.register.findOneAndUpdate(
-                    { email: email, otp: req.body.otp },
-                    { $set: { otpVerify: "Verified" } },
-                    { new: true },
-                    function (err, updatedUser) {
-                      if (err) {
-                        res.status(400).send({
-                          status: false,
-                          message: "Error while updating user details",
-                        });
-                      }
-                      else {
-                        res.status(200).send({
-                          status: true,
-                          message: "OTP verified successfully",
-                          result: { token, user: updatedUser }
-                        });
-                      }
-                    }
-                  );
-                } else {
-                  res.status(200).send({
-                    status: true,
-                    message: "OTP verified successfully",
-                    result: { token, user }
+            }
+            })
+            studentInfo.updateOTP(email, otpVal, (err, updatedUser) => {
+                if (err) {
+                  res.status(400).send({
+                    status: false,
+                    message: err,
                   });
                 }
-              }
-            })
-          } else {
-            res.status(400).send({
-              status: false,
-              message: "Somethimg Wrong.Your OTP is miss Match",
-            });
-          }
+                else
+                {
+                    res.status(200).send({ status: true,message:"Sent"});
+                }
+              })
         }
-      }
-    );
-})
-
-
-
-    router.get('/:shortUrl', async (req, res) =>{
-    const ShortUrl= await shorturl.findOne({short: req.params.shortUrl});
-    if(ShortUrl == null)
-    return res.sendStatus(404);
-    //console.log(shortUrl);
-    ShortUrl.clicks++
-    ShortUrl.save();
-    res.redirect(ShortUrl.full);
-    });
+    })
+});
     
+//verify OTP api
+ router.post('/otpVerify',(req,res) =>{
+     
+    var userotp=req.body.otp;
+studentInfo
+    .find({ Email: globalEmail, Otp:userotp })
+    .then(data => {
+      companyDet = data;
+      if (companyDet.length == 0) {
+      res.status(400).send({ status: false, message: "Otp mismatch" });
+      }
+    else{
+                //update verified in otpVerify
+                    studentInfo.updateOne({ Email: globalEmail }, { OtpVerify: "Verified" }, function (err, otpVerified) {
+                        if (err)
+                         res.status(400).send({ status: false, message: "Unable to update User data" });
+                         else 
+                          res.status(200).send({status: true, message: "Otp Verified successfully"});
+                            });
+                        }    
+            })
+        })
+
+    // change password api
+router.post('/forgotPassword',(req,res) =>{
+
+    var userpass=req.body.password;
+                //password check with Minimum six characters, at least one uppercase letter, one lowercase letter, one number and one special character
+                function passwordCheck (password1) {
+                     return (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/).test(password1)
+                    }
+
+
+                // checking password criteria  
+                if(!!passwordCheck(userpass))
+                    {//creating hash for password
+                        saltRounds = crypto.randomBytes(16).toString('hex'); 
+  
+                            // Hashing user's salt and password with 1000 iterations, 
+                        password1 = crypto.pbkdf2Sync(userpass, saltRounds, 1000, 64, `sha512`).toString(`hex`); 
+
+                    }
+
+
+
+
+                 // Update password with hash value
+                 studentInfo.updateOne({ Email: globalEmail }, { Password: password1 }, function (err, passwordUpdate) {
+                    if (err) res.status(400).send({ status: false, message: "Unable to update User data" });
+                    else passwordUpdate.length != 0;
+                    {
+                      var result = {
+                        status: true,
+                        message: "Your Password Updated successfully."
+                      };
+                      res.status(200).send(result);
+                    }
+                  });
+        });
+  
+
+
+
+
+router.get('/register', (req, res) =>{
+    res.render('register');
+    });
+
 module.exports = function (app) {
     app.use("/", router);
   };

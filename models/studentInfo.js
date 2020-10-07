@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const studentInfoSchema = new mongoose.Schema({
+let studentInfoSchema = new mongoose.Schema({
 Name: {
     type: String
 },
@@ -19,7 +19,15 @@ OtpVerify:
 {
     type:String
 }
-});
+},{ timestamps: true });
 
+const StudentInfo = mongoose.model("Signup", studentInfoSchema);
+StudentInfo.getUserByEmail = (Email, callback) => {
+    StudentInfo.findOne({ Email }, callback);
+  }
+  
+  StudentInfo.updateOTP = (Email, Otp, callback) => {
+    StudentInfo.findOneAndUpdate({ Email }, { $set: { Otp } }, { new: true }, callback)
+  }
 
-module.exports = mongoose.model("Signup", studentInfoSchema);
+module.exports =StudentInfo;

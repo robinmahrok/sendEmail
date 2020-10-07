@@ -5,6 +5,7 @@ const { dbURL } = require(`./config/config`);
 const routes = require('./routes/index.js');
 var bodyParser = require('body-parser');
 
+
 Mongoose.connect(dbURL,
   {
     useNewUrlParser: true,
@@ -13,9 +14,10 @@ Mongoose.connect(dbURL,
   });
   
   app.set('view engine', 'ejs');
-
+  app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json({ limit: '50mb', extended: true }))
+app.use(express.static("public"));
 Mongoose.connection;
 routes(app);
 

@@ -14,7 +14,6 @@ function ValidateEmail(inputText)
 var mailformat = /^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/;
 if(inputText.value.match(mailformat))
 {
-alert("Valid email address!");
 document.form1.text1.focus();
 return true;
 }
@@ -40,7 +39,7 @@ return false;
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Register</h4>
-							<form method="POST" name="form1" action="/routes/loginRoutes.js">
+							<form method="POST" name="form1" action="/signup">
 								<div class="form-group">
 									<label for="name">Name</label>
 									<input id="name" type="text" class="form-control" name="name" required autofocus>
