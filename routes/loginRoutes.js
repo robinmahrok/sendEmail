@@ -3,14 +3,17 @@ const express = require("express");
 const studentInfo = require('../models/studentInfo');
 var saltRounds = 10;
 var crypto = require('crypto'); 
+const bcrypt = require('bcrypt');
 var mailer = require('../functions/mailer');
+var utils=require('../functions/utils');
 const { models } = require('mongoose');
 router = express.Router();
-  
-  router.get('/', async (req, res) =>{
-    const shorturls = await shorturl.find().sort({clicks: -1});
-    res.render('index');
-    });
+var globalEmail="";
+
+
+router.get('/', async (req, res) =>{
+res.render('index');
+});
 
 
 //signup api
@@ -24,23 +27,22 @@ router.post('/signup',   (req,res)=>{
             res.status(400).send({ status: false, message: "Email or Password is missing, Please enter." });
             }
 
+    globalEmail=email;
+
 //password check with Minimum six characters, at least one uppercase letter, one lowercase letter, one number and one special character
 function passwordCheck (password1) {
-    // return (/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*?]{6,}$/).test(password)
     return (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/).test(password1)
   };
 
 
+  var hashedpass=""
 // checking password criteria  
 if(!!passwordCheck(password))
-{//creating hash for password
-    saltRounds = crypto.randomBytes(16).toString('hex'); 
-  
-    // Hashing user's salt and password with 1000 iterations, 
-    password1 = crypto.pbkdf2Sync(password, saltRounds, 1000, 64, `sha512`).toString(`hex`); 
-
-}
-else res.status(400).send("Password does not met criteria");
+{
+   utils.generateHash(password, function (err, hash) {
+    if (!err && hash) {
+      hashedpass = hash
+   
 function  genOTP (min, max)  {
     return Math.floor(min + Math.random() * max);
   }
@@ -53,16 +55,23 @@ sendOTP( email,otpVal, (err, updatedUser) => {
         status: false,
         message: err,
       });
-    
-}
+    }
   })
-//sending data in database
- studentInfo.create({Name: name, Email : email , Password:password1 , OtpVerify:"Pending", Otp:otpVal});
- if(studentInfo.create())
- res.status(200).send("sent");
-    })
-//signup api end
 
+    //sending data in database
+    studentInfo.create({Name: name, Email : email , Password:hashedpass , OtpVerify:"Pending", Otp:otpVal});
+    if(studentInfo.create())
+    res.status(200).send("sent");
+}
+else{
+    res.status(400).send({ status:false, message:"Hash not created"})
+}
+})
+
+}
+else res.status(400).send("Password does not met criteria");
+})
+//signup api end
 
 
 const sendOTP = ( recipient, otpVal, callback) => {
@@ -76,10 +85,9 @@ const sendOTP = ( recipient, otpVal, callback) => {
         } else {
           callback("Unable to send OTP through email", null)
         }
-      });
-    
+      });   
   }
-var globalEmail="";
+
 
 //send and update otp in database api
 router.post('/sendOtp',(req,res) =>{
@@ -95,11 +103,11 @@ globalEmail=email;
         if (err || !user) {
           res.status(400).send({ status: false, message: "User not found" });
         } else {
-         
-            function  genOTP (min, max)  {
+
+              function  genOTP (min, max)  {
                 return Math.floor(min + Math.random() * max);
               }
-            
+
             var otpVal=genOTP(100000, 900000);
             sendOTP( email, otpVal, (err) => {
               if (err) {
@@ -113,7 +121,7 @@ globalEmail=email;
                 if (err) {
                   res.status(400).send({
                     status: false,
-                    message: err,
+                    message: err
                   });
                 }
                 else
@@ -137,42 +145,38 @@ studentInfo
       res.status(400).send({ status: false, message: "Otp mismatch" });
       }
     else{
-                //update verified in otpVerify
-                    studentInfo.updateOne({ Email: globalEmail }, { OtpVerify: "Verified" }, function (err, otpVerified) {
-                        if (err)
-                         res.status(400).send({ status: false, message: "Unable to update User data" });
-                         else 
-                          res.status(200).send({status: true, message: "Otp Verified successfully"});
-                            });
-                        }    
-            })
-        })
+            //update verified in otpVerify
+            studentInfo.updateOne({ Email: globalEmail }, { OtpVerify: "Verified" }, function (err, otpVerified) 
+             {
+            if (err)
+             res.status(400).send({ status: false, message: "Unable to update User data" });
+            else 
+             res.status(200).send({status: true, message: "Otp Verified successfully"});
+                });
+        }    
+    })
+})
 
-    // change password api
+// change password api
 router.post('/forgotPassword',(req,res) =>{
 
     var userpass=req.body.password;
+
                 //password check with Minimum six characters, at least one uppercase letter, one lowercase letter, one number and one special character
                 function passwordCheck (password1) {
                      return (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/).test(password1)
                     }
 
-
                 // checking password criteria  
                 if(!!passwordCheck(userpass))
-                    {//creating hash for password
-                        saltRounds = crypto.randomBytes(16).toString('hex'); 
-  
-                            // Hashing user's salt and password with 1000 iterations, 
-                        password1 = crypto.pbkdf2Sync(userpass, saltRounds, 1000, 64, `sha512`).toString(`hex`); 
-
-                    }
-
-
-
-
+                    { 
+                        utils.generateHash(userpass, function (err, hash) {
+                            if (!err && hash) {
+                              hashedpass = hash
+                           
                  // Update password with hash value
-                 studentInfo.updateOne({ Email: globalEmail }, { Password: password1 }, function (err, passwordUpdate) {
+                 studentInfo.updateOne({ Email: globalEmail }, { Password: hashedpass }, function (err, passwordUpdate) 
+                 {
                     if (err) res.status(400).send({ status: false, message: "Unable to update User data" });
                     else passwordUpdate.length != 0;
                     {
@@ -182,15 +186,44 @@ router.post('/forgotPassword',(req,res) =>{
                       };
                       res.status(200).send(result);
                     }
-                  });
+                  })
+                }
+                else res.status(400).send({ status:false , message:"Password doesn't met requirement"});
         });
+    }
+});
   
+router.post('/login', (req,res) =>{
+    var email=req.body.email,
+    password=req.body.password;
 
+    studentInfo
+    .find({ Email: email })
+    .then(data => {
+      companyDet = data;
+      if (companyDet.length == 0) {
+      res.status(400).send({ status: false, message: "No User found" });
+      }
+    else{
+       var dbpass= companyDet[0].Password;
+       utils.validatePassword(password, dbpass, function (err, data) {
+        if (!err && data) {
+         res.status(200).send({status: true , message:"Password verified."});
+    }
+    else
+    res.status(400).send({status: false , message:"EMail/Password incorrect"});
+})
+    }
+})
 
-
+});
 
 router.get('/register', (req, res) =>{
     res.render('register');
+    });
+
+router.get('/forgot', (req, res) =>{
+    res.render('forgot');
     });
 
 module.exports = function (app) {

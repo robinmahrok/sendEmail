@@ -8,25 +8,6 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="css/my-login.css">
 
-<script>
-function ValidateEmail(inputText)
-{
-var mailformat = /^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/;
-if(inputText.value.match(mailformat))
-{
-document.form1.text1.focus();
-return true;
-}
-else
-{
-alert("You have entered an invalid email address!");
-document.form1.text1.focus();
-return false;
-}
-}
-
-</script>
-    
 </head>
 <body class="my-login-page">
 	<section class="h-100">
@@ -39,10 +20,10 @@ return false;
 					<div class="card fat">
 						<div class="card-body">
 							<h4 class="card-title">Register</h4>
-							<form method="POST" name="form1" action="/signup">
+							<form method="POST" name="form1" class="my-login-validation" action="/signup">
 								<div class="form-group">
 									<label for="name">Name</label>
-									<input id="name" type="text" class="form-control" name="name" required autofocus>
+									<input id="name" type="text" class="form-control"  name="name" required autofocus>
 									
 								</div>
 
@@ -58,6 +39,25 @@ return false;
 									
 								</div>
 
+								<script>
+								function ValidateEmail(inputText)
+								{
+									var mailformat = /^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/;
+								if(inputText.value.match(mailformat))
+								{
+								document.form1.text1.focus();
+								return true;
+								}
+								else
+								{
+								alert("You have entered an invalid email address!");
+								document.form1.text1.focus();
+								return false;
+								
+								}
+								}
+								
+							</script>
 								<div class="form-group">
 									<div class="custom-checkbox custom-control">
 										<input type="checkbox" name="agree" id="agree" class="custom-control-input" required="">
@@ -72,7 +72,7 @@ return false;
 									</button>
 								</div>
 								<div class="mt-4 text-center">
-									Already have an account? <a href="index.ejs">Login</a>
+									Already have an account? <a href="/">Login</a>
 								</div>
 							</form>
 						</div>
