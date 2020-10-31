@@ -1,14 +1,10 @@
-const shorturl = require('../models/shorturl');
 const express = require("express");
 const studentInfo = require('../models/studentInfo');
-var saltRounds = 10;
-var crypto = require('crypto'); 
-const bcrypt = require('bcrypt');
 var mailer = require('../functions/mailer');
 var utils=require('../functions/utils');
 const { models } = require('mongoose');
 router = express.Router();
-var globalEmail="";
+var globalEmail=""; 
 
 
 router.get('/', async (req, res) =>{
@@ -34,9 +30,22 @@ function passwordCheck (password1) {
     return (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/).test(password1)
   };
 
-
+  function emailCheck (password1) {
+    return (/^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/).test(password1)
+  };
   var hashedpass=""
-// checking password criteria  
+
+  studentInfo.getUserByEmail(email, (err, user) => {
+    if (err || !user) {
+      //res.status(200).send({ status: true, message: "User not found" });
+   
+
+
+
+
+// checking email and password criteria
+if(!!emailCheck(email))
+{  
 if(!!passwordCheck(password))
 {
    utils.generateHash(password, function (err, hash) {
@@ -61,17 +70,27 @@ sendOTP( email,otpVal, (err, updatedUser) => {
     //sending data in database
     studentInfo.create({Name: name, Email : email , Password:hashedpass , OtpVerify:"Pending", Otp:otpVal});
     if(studentInfo.create())
-    res.status(200).send("sent");
+    res.redirect('/otphtml');
 }
 else{
-    res.status(400).send({ status:false, message:"Hash not created"})
+    res.status(400).send({ status:false, message:"Hash not created"});
 }
 })
 
 }
-else res.status(400).send("Password does not met criteria");
-})
-//signup api end
+else { //res.status(400).send({status:false , message:"Password does not met criteria"});
+res.redirect('/register');
+}
+}
+else {//res.status(400).send({status:false , message:"Email does not met criteria"});
+res.redirect('/register');
+}
+
+} else {
+  res.status(400).send({ status:false, message:"User Already Exists"});
+}
+  })
+})  //signup api end
 
 
 const sendOTP = ( recipient, otpVal, callback) => {
@@ -98,7 +117,7 @@ globalEmail=email;
    {
         res.status(400).send({ status: false, message: "Email is missing, Please enter." });
     }
-
+else{
     studentInfo.getUserByEmail(email, (err, user) => {
         if (err || !user) {
           res.status(400).send({ status: false, message: "User not found" });
@@ -131,6 +150,7 @@ globalEmail=email;
               })
         }
     })
+  }
 });
     
 //verify OTP api
@@ -142,7 +162,8 @@ studentInfo
     .then(data => {
       companyDet = data;
       if (companyDet.length == 0) {
-      res.status(400).send({ status: false, message: "Otp mismatch" });
+      //res.status(400).send({ status: false, message: "Otp mismatch" });
+        res.render('/otphtml');
       }
     else{
             //update verified in otpVerify
@@ -196,6 +217,29 @@ router.post('/forgotPassword',(req,res) =>{
 router.post('/login', (req,res) =>{
     var email=req.body.email,
     password=req.body.password;
+   if (req.body.email == null || typeof req.body.email == undefined || req.body.email.length == 0 ||
+      req.body.password == null || typeof req.body.password == undefined || req.body.password.length == 0) {
+      res.redirect('/');
+      }
+
+globalEmail=email;
+
+//password check with Minimum six characters, at least one uppercase letter, one lowercase letter, one number and one special character
+function passwordCheck (password1) {
+return (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/).test(password1)
+};
+
+function emailCheck (password1) {
+return (/^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/).test(password1)
+};
+var hashedpass=""
+// checking email and password criteria
+if(!!emailCheck(email))
+{  
+if(!!passwordCheck(password))
+{
+
+
 
     studentInfo
     .find({ Email: email })
@@ -204,18 +248,35 @@ router.post('/login', (req,res) =>{
       if (companyDet.length == 0) {
       res.status(400).send({ status: false, message: "No User found" });
       }
-    else{
+    else {
        var dbpass= companyDet[0].Password;
+       var otpver=companyDet[0].OtpVerify;
        utils.validatePassword(password, dbpass, function (err, data) {
         if (!err && data) {
-         res.status(200).send({status: true , message:"Password verified."});
+         //res.status(200).send({status: true , message:"Password verified."});
+        if(otpver=="Verified")
+        {
+          res.status(200).send({status: true , message:"we will soon add homepage"})
+        }
+        else
+        {
+          res.status(400).send({status: false , message:"Otp not verified."})
+        }
     }
+  
     else
     res.status(400).send({status: false , message:"EMail/Password incorrect"});
 })
     }
 })
-
+}
+else {
+res.redirect('/');
+}
+}
+else {
+res.redirect('/');
+}
 });
 
 router.get('/register', (req, res) =>{
@@ -225,6 +286,10 @@ router.get('/register', (req, res) =>{
 router.get('/forgot', (req, res) =>{
     res.render('forgot');
     });
+
+    router.get('/otphtml', (req, res) =>{
+      res.render('otp');
+      });
 
 module.exports = function (app) {
     app.use("/", router);
