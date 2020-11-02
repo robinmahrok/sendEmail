@@ -19,17 +19,17 @@
 					</div>
 					<div class="card fat">
 						<div class="card-body">
-							<h4 class="card-title">OTP Verify</h4>
-							<form method="POST" class="my-login-validation" novalidate="" action="/otpverify">
-								<div class="form-group">
-									<label for="email">Enter 6 Digit OTP</label>
-									<input id="otp" type="text" class="form-control" name="otp" value="" required autofocus>
-					   			</div>
-
+							<h4 class="card-title">You have not verified your OTP</h4>
+							<form method="POST" class="my-login-validation" novalidate="" action="/sendOtp">
 								<div class="form-group m-0">
+                                    <div class="form-group">
+                                        <label for="email">Enter Email</label>
+                                        <input id="email" type="text" class="form-control" name="email" value="" required autofocus>
+                                       </div>
 									<button type="submit" class="btn btn-primary btn-block" >
-										Verify OTP
-									</button>
+										Click Here
+                                    </button>
+                                    to send OTP again
 								</div>
 							</form>
 						</div>

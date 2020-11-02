@@ -145,7 +145,7 @@ else{
                 }
                 else
                 {
-                    res.status(200).send({ status: true,message:"Sent"});
+                   res.redirect('/otphtml');
                 }
               })
         }
@@ -163,7 +163,7 @@ studentInfo
       companyDet = data;
       if (companyDet.length == 0) {
       //res.status(400).send({ status: false, message: "Otp mismatch" });
-        res.render('/otphtml');
+        res.redirect('/otphtml');
       }
     else{
             //update verified in otpVerify
@@ -172,11 +172,14 @@ studentInfo
             if (err)
              res.status(400).send({ status: false, message: "Unable to update User data" });
             else 
-             res.status(200).send({status: true, message: "Otp Verified successfully"});
+            res.redirect('/'); 
+            //res.status(200).send({status: true, message: "Otp Verified successfully"});
                 });
         }    
     })
 })
+ 
+
 
 // change password api
 router.post('/forgotPassword',(req,res) =>{
@@ -238,9 +241,6 @@ if(!!emailCheck(email))
 {  
 if(!!passwordCheck(password))
 {
-
-
-
     studentInfo
     .find({ Email: email })
     .then(data => {
@@ -260,7 +260,8 @@ if(!!passwordCheck(password))
         }
         else
         {
-          res.status(400).send({status: false , message:"Otp not verified."})
+         // res.status(400).send({status: false , message:"Otp not verified."})
+         res.redirect('/otprevalid');
         }
     }
   
@@ -290,7 +291,9 @@ router.get('/forgot', (req, res) =>{
     router.get('/otphtml', (req, res) =>{
       res.render('otp');
       });
-
+      router.get('/otprevalid', (req, res) =>{
+        res.render('otpnotv');
+        });
 module.exports = function (app) {
     app.use("/", router);
   };
