@@ -217,6 +217,7 @@ router.post('/forgotPassword',(req,res) =>{
     }
 });
   
+// login api starts
 router.post('/login', (req,res) =>{
     var email=req.body.email,
     password=req.body.password;
@@ -253,32 +254,35 @@ if(!!passwordCheck(password))
        var otpver=companyDet[0].OtpVerify;
        utils.validatePassword(password, dbpass, function (err, data) {
         if (!err && data) {
-         //res.status(200).send({status: true , message:"Password verified."});
         if(otpver=="Verified")
         {
-          res.status(200).send({status: true , message:"we will soon add homepage"})
+          res.redirect('/profile');
+         // res.status(200).send({status: true , message:"we will soon add homepage"})
         }
         else
         {
          // res.status(400).send({status: false , message:"Otp not verified."})
          res.redirect('/otprevalid');
         }
-    }
-  
+      }
     else
-    res.status(400).send({status: false , message:"EMail/Password incorrect"});
-})
-    }
-})
+      res.status(400).send({status: false , message:"EMail/Password incorrect"});
+    })
+   }
+  })
+ }
+else
+ {
+  res.redirect('/');
+ }
 }
-else {
-res.redirect('/');
-}
-}
-else {
-res.redirect('/');
-}
+else
+ {
+  res.redirect('/');
+ }
 });
+//login api ends
+
 
 router.get('/register', (req, res) =>{
     res.render('register');
@@ -288,12 +292,38 @@ router.get('/forgot', (req, res) =>{
     res.render('forgot');
     });
 
-    router.get('/otphtml', (req, res) =>{
-      res.render('otp');
-      });
-      router.get('/otprevalid', (req, res) =>{
-        res.render('otpnotv');
-        });
+router.get('/otphtml', (req, res) =>{
+    res.render('otp');
+    });
+
+router.get('/otprevalid', (req, res) =>{
+    res.render('otpnotv');
+    });
+
+router.get('/profile', (req, res) =>{
+    res.render('profile1');
+    });
+
+router.get('/barons', (req, res) =>{
+    res.render('baronsmenu');
+    });
+
+router.get('/foodcourt', (req, res) =>{
+    res.render('foodcourtmenu');
+   });
+
+router.post('/thanks', (req, res) =>{
+    res.render('thanks');
+    });
+
+router.get('/orders', (req, res) =>{
+    res.render('yourorders');
+    });
+
+router.get('/yourprofile', (req, res) =>{
+    res.render('yourprofile');
+    });
+
 module.exports = function (app) {
     app.use("/", router);
-  };
+    };

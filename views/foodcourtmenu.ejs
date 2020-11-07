@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html id="current">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Welcome to Barons!!!</title>
+		<link rel="icon" href="http://localhost/WTProject/Home/title.png" type="image/x-icon">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<style>
+			* {
+  box-sizing: border-box;
+}
+.menu {
+  float:left;
+  width:20%;
+  /*margin-top:15%;
+  position:fixed;
+  height:100%;*/
+  text-align:center;
+}
+.menu a:link{
+	background-color: transparent;
+   text-decoration: none;
+}
+.menuitem {
+  color: white;
+  background-color:#737373;
+  padding:40px 10px 40px 10px;
+  margin-top:7px;
+  border-radius: 3px;
+  font-size : 15px;
+  font-family : Arial, Helvetica, sans-serif;
+  
+}
+.menuitem:hover {
+    background-color: #ff5233;
+	box-shadow:5px 4px 10px 0 gray, 5px 4px 20px 0 gray;
+ }
+#except {
+	background-color:tomato;
+	box-shadow: 0px 0px 0px 0 gray, 0px 0px 0px 0 gray;
+}
+.main {
+  float:left;
+  width:60%;
+  padding:0 20px;
+}
+.right {
+  background-color:#e5e5e5;
+  float:left;
+  width:20%;
+  padding:15px;
+  margin-top:7px;
+  text-align:center;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #ff6347;
+}
+li {
+    float: left;
+	color : white;
+	font-size : 15px; 
+	font-variant : small-caps;
+	font-family : Arial, Helvetica, sans-serif;
+}
+a{
+text-decoration: none;
+}
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #ff5233;
+	border-radius: 5px;
+	box-shadow:0 10px 10px 0 rgba(0,0,0,0.4),0 20px 20px 0 rgba(0,0,0,0.4) ;
+}
+.bottom {
+background-color:#e5e5e5;
+text-align:center;
+padding:10px;
+margin-top:7px;
+float:bottom;
+}
+.tu{
+background-color: white;
+}
+.t:hover {
+	border-radius: 4px;
+    background-color:  #ffe9e6;
+	box-shadow:5px 4px 10px 0 rgba(0,0,0,0.2),5px 4px 20px 0 rgba(0,0,0,0.19);
+}
+#rcorners1
+		{
+			border-radius: 3px;
+			background: #e5e5e5;	
+			padding: 10px; 
+			    
+		}
+.cover{
+padding:15px;
+
+}
+body{
+font-family:Verdana;
+background-image: url("http://localhost/WTProject/Home/bgcover.png");
+}
+@media only screen and (max-width:620px) {
+  /* For mobile phones: */
+  .menu, .main, .right {
+    width:100%;
+  }
+}
+.sub{
+	background-color:turquoise;
+	border-radius:3px;
+	padding:4px;
+	border:none;
+	align:center;
+	padding: 10px 30px;
+	font-family : Arial, Helvetica, sans-serif;
+}
+.sub:hover{
+	background-color:tomato;
+ 	box-shadow:5px 4px 10px 0 rgba(0,0,0,0.2),5px 4px 20px 0 rgba(0,0,0,0.19);
+}
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+    position: absolute;
+    opacity: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: tomato;
+	border-radius:2px;
+	border:2px solid black;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: lightgreen;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+		</style>
+	</head>
+	<body>
+		<div class="ncontainer">
+  <img style="opacity:" src="img/spices.png" alt="Main Image" width="100%" height="400" />
+  <div class="ncenter"></div>
+</div>
+<ul style="overflow:auto;border-radius: 4px;">
+  <li><a class="active" href="#">Home</a></li>
+  <li><a href="#">Contact</a></li>
+  <li><a href="#">About</a></li>
+</ul>
+<div style="overflow:auto">
+  
+			<div class="main">
+				<form action="/thanks" method="post">
+					<table class="t"  >
+						<tr margin="2px" ></tr>
+							<td rowspan="3" width="20%" ><img src="img/pavbhaji.jpg" width="120px" height="120px" ></td>
+							<td><b style="font-family : Arial, Helvetica, sans-serif;">Pav Bhaji</b></td>
+							<td><img src="img/VegSymb.png" width="25px" height="25px"></td>
+						</tr>
+							<td width="80%">
+								<select id="rcorners1" size="1">
+									<option value="volvo" style="font-family : Arial, Helvetica, sans-serif;">Mumbai PavBhaji</option>
+									<option value="saab">Kada PavBhaji</option>
+									<option value="fiat">Punjabi PavBhaji</option>
+									<option value="audi">Kolhapuri PavBhaji</option>
+								</select>
+							</td>
+							<td rowspan="2"><label class="container"><input type="checkbox" name="PavBhaji" value="PavBhaji 40"/>
+							<span class="checkmark"></span></label></td>
+											
+						</tr>	
+						<tr>
+							<td><pre><h3><b>&#8377 40 </b></h3></pre></td>
+						</tr>
+					</table>
+					<table class="t" >
+						<tr margin="2px" ></tr>
+							<td rowspan="3" width="20%" ><img src="img/paneer.jpg" width="120px" height="120px" ></td>
+							<td><b style="font-family : Arial, Helvetica, sans-serif;">Paneer</b></td>
+							<td><img src="img/VegSymb.png" width="25px" height="25px"></td>
+						</tr>
+							<td width="80%">
+								<select id="rcorners1" size="1">
+									<option value="volvo">Mattar Paneer</option>
+									<option value="saab">Shahi Paneer</option>
+									<option value="fiat">Kadai Paneer</option>
+									<option value="audi">Palak Paneer</option>
+								</select>
+							</td>
+							<td rowspan="2"><label class="container"><input type="checkbox" name="Paneer" value="Paneer 120" /><span class="checkmark"></span></label></td>
+						</tr>	
+						<tr>
+							<td><pre><h3><b>&#8377 120 </b></h3></pre></td>
+						</tr>
+					</table>
+					<table class="t"  >
+						<tr margin="2px" ></tr>
+							<td rowspan="3" width="20%" ><img src="img/rava-dhokla-recipe.jpg" width="120px" height="120px" ></td>
+							<td><b style="font-family : Arial, Helvetica, sans-serif;">Dhokla</b></td>
+							<td><img src="img/VegSymb.png" width="25px" height="25px"></td>
+						</tr>
+							<td width="80%">
+								<select id="rcorners1" size="1">
+									<option value="volvo">Rava Dhokla</option>
+									<option value="saab">Khandavi Dhokla</option>
+									<option value="fiat">Cheesy Dhokla</option>
+								</select>
+							</td>
+							<td rowspan="2"><label class="container"><input type="checkbox" name="Dhokla" value="Dhokla 50" /><span class="checkmark"></span></label></td>
+						</tr>	
+						<tr>
+							<td><pre><h3><b>&#8377 50 </b></h3></pre></td>
+						</tr>
+					</table>
+					<table class="t"  >
+						<tr margin="2px" ></tr>
+						<tr>
+							<td rowspan="2" width="20%" ><img src="img/stuffed shimla.jpg" width="120px" height="120px"  ></td>
+							<td width="80%"><b style="font-family : Arial, Helvetica, sans-serif;">Stuffed Shimla Mirch</b></td>
+							<td><img src="img/VegSymb.png" width="25px" height="25px"></td>
+						</tr>
+						<tr>
+							<td><pre><h3><b>&#8377 75 </b></h3></pre></td>
+							<td rowspan="2"><label class="container"><input type="checkbox" name="Stuffed_Shimla_Mirch" value="Stuffed_Shimla_Mirch 75" /><span class="checkmark"></span></label></td>
+						</tr>
+					</table>	
+					<table class="t"  >
+						<tr margin="2px" ></tr>
+						<tr>
+							<td rowspan="2" width="20%" ><img src="img/kashmiri-dum-aloo-620.jpg" width="120px" height="120px"  ></td>
+							<td width="80%"><b style="font-family : Arial, Helvetica, sans-serif;">Kashmiri Dum Aloo</b></td>
+							<td><img src="img/VegSymb.png" width="25px" height="25px"></td>
+						</tr>
+						<tr>
+							<td><pre><h3><b>&#8377 60 </b></h3></pre></td>
+							<td rowspan="2"><label class="container"><input type="checkbox" name="Kashmiri_Dum_Aloo" value="Kashmiri_Dum_Aloo 60" /><span class="checkmark"></span></label></td>
+						</tr>
+					</table>
+					<table class="t"  >
+						<tr margin="2px" ></tr>
+						<tr>
+							<td rowspan="2" width="20%" ><img src="img/veg-biryani.jpg" width="120px" height="120px"  ></td>
+							<td width="80%"><b style="font-family : Arial, Helvetica, sans-serif;">Tava Pulao</b></td>
+							<td><img src="img/VegSymb.png" width="25px" height="25px"></td>
+						</tr>
+						<tr>
+							<td><pre><h3><b>&#8377 80 </b></h3></pre></td>
+							<td rowspan="2"><label class="container"><input type="checkbox" name="Tava_Pulao" value="Tava_Pulao 80" /><span class="checkmark"></span></label></td>
+						</tr>
+					</table>
+					<table class="t" >
+						<tr margin="2px" ></tr>
+						<tr>
+							<td rowspan="2" width="20%" ><img src="img/THALI.png" width="120px" height="120px"  ></td>
+							<td width="80%"><b style="font-family : Arial, Helvetica, sans-serif;">North Indian Thali</b></td>
+							<td><img src="img/VegSymb.png" width="25px" height="25px"></td>
+						</tr>
+						<tr>
+							<td><pre><h3><b>&#8377 150 </b></h3></pre></td>
+							<td rowspan="2"><label class="container"><input type="checkbox" name="North_Indian_Thali" value="North_Indian_Thali 150" /><span class="checkmark"></span></label></td>
+						</tr>
+					</table>
+					<table class="t" >
+						<tr margin="2px" ></tr>
+						<tr>
+							<td rowspan="2" width="20%" ><img src="img/Rajma-Chaval-Recipe-Photo..jpg" width="120px" height="120px"  ></td>
+							<td width="80%"><b style="font-family : Arial, Helvetica, sans-serif;">Rajma Chawal</b></td>
+							<td><img src="img/VegSymb.png" width="25px" height="25px"></td>
+						</tr>
+						<tr>
+							<td><pre><h3><b>&#8377 100 </b></h3></pre></td>
+							<td rowspan="2"><label class="container"><input type="checkbox" name="Rajma_Chawal" value="Rajma_Chawal 100" /><span class="checkmark"></span></label></td>
+						</tr>
+					</table>
+					<table class="t" >
+						<tr margin="2px" ></tr>
+						<tr>
+							<td rowspan="2" width="20%" ><img src="img/cb s main.jpg" width="120px" height="120px"  ></td>
+							<td width="80%"><b style="font-family : Arial, Helvetica, sans-serif;">Chhole Bature</b></td>
+							<td><img src="img/VegSymb.png" width="25px" height="25px"></td>
+						</tr>
+						<tr>
+							<td><pre><h3><b>&#8377 110 </b></h3></pre></td>
+							<td rowspan="2"><label class="container"><input type="checkbox" name="Chole_Bature" value="Chole_Bature 110" /><span class="checkmark"></span></label></td>
+						</tr>
+					</table>
+					<table class="t">
+						<tr margin="2px" ></tr>
+						<tr>
+							<td rowspan="2" width="20%" ><img src="img/samosa.jpg" width="120px" height="120px"  ></td>
+							<td width="80%"><b style="font-family : Arial, Helvetica, sans-serif;">Samosa</b></td>
+							<td><img src="img/VegSymb.png" width="25px" height="25px"></td>
+						</tr>
+						<tr>
+							<td><pre><h3><b>&#8377 20 </b></h3></pre></td>
+							<td rowspan="2"><label class="container"><input type="checkbox" name="Samosa" value="Samosa 20" /><span class="checkmark"></span></label></td>
+						</tr>
+					</table>
+					<br />
+					<input type="Submit" class="sub" value="Add to Cart" />
+				</form>
+			</div>
+		</div>
+		<br />
+	<div class="bottom" style="background-color:#737373;color:white;">© copyright || ALL RIGHTS RESERVED.</div>
+
+<script>
+</script>
+</body>
+</html>
