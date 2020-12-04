@@ -15,6 +15,18 @@
 size : 10px;
 
  }
+ .logoutLblPos{
+
+position:fixed;
+right:10px;
+top:5px;
+}
+.ema{
+
+position:fixed;
+right:100px;
+top:5px;
+}
 </style>
 <script>
 
@@ -22,7 +34,7 @@ function stringGen() {
   var text = "";
   var char_list =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 6; i++) {
     text += char_list.charAt(Math.floor(Math.random() * char_list.length));
   }
   document.getElementById("result").innerHTML = text;
@@ -34,15 +46,21 @@ function stringGen() {
 		<h1 class="site-header__title" data-lead-id="site-header-title">THANK YOU!</h1>
 	</header>
 
+	<form align="right" name="form1" method="get" action="/">
+		<label class="logoutLblPos">
+		<input name="submit2" type="submit" id="submit2" value="Log out">
+		</label>
+	  </form>
+	<label class="ema">
+	  <%=Email%>
+	</label>
+	
 	<div class="main-content">
 		<i class="fa fa-check main-content__checkmark" id="checkmark"></i>
-		<p class="main-content__body" data-lead-id="main-content-body">Thanks a bunch for ordering. It means a lot to us, just like you do! We really appreciate you giving us a moment of your time today. Thanks for being you.</p>
+		<p class="main-content__body" data-lead-id="main-content-body">Thanks a bunch for ordering. It means a lot to us, just like you do! We really appreciate you giving us a moment of your time today.</p>
 		<h3>YOUR ORDER NUMBER IS</h3>
 	</div>
 			  <h1 id="result"></h1>
-
-	
-	
 
 	<footer class="site-footer" id="footer">
 		<p class="site-footer__fineprint" id="fineprint">Copyright ©2014 | All Rights Reserved</p>

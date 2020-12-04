@@ -38,9 +38,30 @@ a {
 button:hover, a:hover {
   opacity: 0.7;
 }
+.logoutLblPos{
+
+position:fixed;
+right:10px;
+top:5px;
+}
+.ema{
+
+position:fixed;
+right:100px;
+top:5px;
+}
 </style>
 </head>
 <body>
+
+  <form align="right" name="form1" method="post" action="log_out.php">
+    <label class="logoutLblPos">
+    <input name="submit2" type="submit" id="submit2" value="Log out">
+    </label>
+  </form>
+<label class="ema">
+  <%=Email%>
+</label>
 
 <h2 style="text-align:center">User Profile</h2>
 

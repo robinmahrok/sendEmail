@@ -31,7 +31,7 @@ OrderInfo.getUserByEmail = (Email, callback) => {
     OrderInfo.findOne({ Email }, callback);
   }
   
-  OrderInfo.updateOrder = (Email, Otp, callback) => {
+  OrderInfo.updateOrder = (Email, callback) => {
     OrderInfo.findOneAndUpdate({ Email }, { $set: { Items,orderNo, price } }, { new: true }, callback)
   }
 

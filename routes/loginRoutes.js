@@ -278,6 +278,8 @@ else
 });
 //login api ends
 
+
+//select food api
 router.post('/SelectFood',(req,res) =>{
      var food=[];
    food=req.body.food;
@@ -319,9 +321,11 @@ orderInfo
           if (err)
            res.status(400).send({ status: false, message: "Unable to update User data" });
           else 
-          res.redirect('/thanks'); 
+         {  
           sum=0;
           food=null;
+          res.redirect('/thanks');
+        }
               });
             }
       }    
@@ -346,27 +350,27 @@ router.get('/otprevalid', (req, res) =>{
     });
 
 router.get('/profile', (req, res) =>{
-    res.render('profile1');
+    res.render('profile1',{Email:globalEmail});
     });
 
 router.get('/barons', (req, res) =>{
-    res.render('baronsmenu');
+    res.render('baronsmenu',{Email:globalEmail});
     });
 
 router.get('/foodcourt', (req, res) =>{
-    res.render('foodcourtmenu');
+    res.render('foodcourtmenu',{Email:globalEmail});
    });
 
 router.get('/thanks', (req, res) =>{
-    res.render('thanks');
+    res.render('thanks',{Email:globalEmail});
     });
 
 router.get('/orders', (req, res) =>{
-    res.render('yourorders');
+    res.render('yourorders',{Email:globalEmail});
     });
 
 router.get('/yourprofile', (req, res) =>{
-    res.render('yourprofile');
+    res.render('yourprofile',{Email:globalEmail});
     });
 
 module.exports = function (app) {

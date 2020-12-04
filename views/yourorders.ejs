@@ -41,9 +41,30 @@ body {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
+.logoutLblPos{
+
+position:fixed;
+right:10px;
+top:5px;
+}
+.ema{
+
+position:fixed;
+right:100px;
+top:5px;
+}
 </style>
 </head>
 <body>
+
+  <form align="right" name="form1" method="post" action="log_out.php">
+    <label class="logoutLblPos">
+    <input name="submit2" type="submit" id="submit2" value="Log out">
+    </label>
+  </form>
+<label class="ema">
+  <%=Email%>
+</label>
 
 <div class="sidenav">
   <a href="#contact">ALL</a>

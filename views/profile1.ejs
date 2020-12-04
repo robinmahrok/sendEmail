@@ -64,6 +64,18 @@
   transform: translate(-50%, -50%);
   text-align: center;
 }
+.logoutLblPos{
+
+position:fixed;
+right:10px;
+top:5px;
+}
+.ema{
+
+position:fixed;
+right:100px;
+top:5px;
+}
 </style>
 </head>
 <body>
@@ -71,7 +83,15 @@
 <nav class="navbar navbar-expand-sm bg-light navbar-light">
   <!-- Brand/logo -->
   <a class="navbar-brand" href="#"><img src="img/logo.png" width="30" height="30" ></a>
-  
+
+  <form align="right" name="form1" method="get" action="/">
+    <label class="logoutLblPos">
+    <input name="submit2" type="submit" id="submit2" value="Log out">
+    </label>
+  </form>
+<label class="ema">
+  <%=Email%>
+</label>
   <!-- Links -->
   <ul class="navbar-nav">
     <li class="nav-item">
@@ -80,8 +100,9 @@
 	  <li class="nav-item">
       <a class="nav-link" href="/yourprofile"><b>PROFILE</b></a>
       </li>
+      
 	  </ul>
- 
+   
 
   
   
