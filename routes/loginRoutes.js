@@ -5,12 +5,11 @@ var utils=require('../functions/utils');
 const { models } = require('mongoose');
 router = express.Router();
 var globalEmail=""; 
-
+const orderInfo = require('../models/orderInfo');
 
 router.get('/', async (req, res) =>{
 res.render('index');
 });
-
 
 //signup api
 router.post('/signup',   (req,res)=>{
@@ -39,10 +38,6 @@ function passwordCheck (password1) {
     if (err || !user) {
       //res.status(200).send({ status: true, message: "User not found" });
    
-
-
-
-
 // checking email and password criteria
 if(!!emailCheck(email))
 {  
@@ -283,6 +278,56 @@ else
 });
 //login api ends
 
+router.post('/SelectFood',(req,res) =>{
+     var food=[];
+   food=req.body.food;
+   var fs=[];
+  for(var i=0;i<food.length;i++)
+   fs[i]=food[i].split(' ');
+var sum=0;
+orderInfo
+  .find({ Email: globalEmail })
+  .then(data => {
+    companyDet = data;
+    if (companyDet.length == 0) {
+
+       //sending data in database
+       for(var i=0;i<fs.length;i++)
+       sum=sum+ parseInt(fs[i][1],10);
+
+  //console.log(sum);
+
+
+    orderInfo.create({Email : globalEmail , Items:fs, price: sum });
+    sum=0;
+    food=null;
+    res.redirect('/thanks'); 
+    
+    }
+    else{ if(companyDet[0].taken==false && companyDet[0].accepted==true)
+      {
+        res.status(200).send({ status: true, message: "First take your previous order" });
+
+      }
+      else{
+         //sending data in database
+         for(var i=0;i<fs.length;i++)
+         sum=sum+ parseInt(fs[i][1],10);
+          //update verified in otpVerify
+          orderInfo.updateOne({ Email: globalEmail }, { Items: fs , price: sum }, function (err, foodsent) 
+           {
+          if (err)
+           res.status(400).send({ status: false, message: "Unable to update User data" });
+          else 
+          res.redirect('/thanks'); 
+          sum=0;
+          food=null;
+              });
+            }
+      }    
+  
+})
+})
 
 router.get('/register', (req, res) =>{
     res.render('register');
@@ -312,7 +357,7 @@ router.get('/foodcourt', (req, res) =>{
     res.render('foodcourtmenu');
    });
 
-router.post('/thanks', (req, res) =>{
+router.get('/thanks', (req, res) =>{
     res.render('thanks');
     });
 
