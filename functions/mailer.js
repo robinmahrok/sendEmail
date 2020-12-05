@@ -49,11 +49,31 @@ const mailer = (data, cb) => {
           console.log(error);
             cb({ status: 1001 });
         } else {
-            console.log("yessss")
+            
+            cb({ status: 1000 });
+        }
+    });
+};
+
+const mailer2 = (data, cb) => {
+    let mailOptions = {
+        from: '"Panch Pandav" <' + mailSettings.auth.user + ">",
+        to: data.email,
+        subject: "Your Order Details",
+        html: "<h1>Hello</h1><p>Your Order Number is : </p><b><h2>" + data.otpVal + "</h2></b>" +"<b><p> And Your Items are : </p><b>" + data.Items + "</b>"+
+        "<b><p> And Total Amount is : Rs.<h3>" + data.price + "</h3>"
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+            cb({ status: 1001 });
+        } else {
             cb({ status: 1000 });
         }
     });
 };
 
 module.exports =mailer;
+module.exports=mailer2;
 

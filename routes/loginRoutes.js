@@ -1,11 +1,14 @@
 const express = require("express");
 const studentInfo = require('../models/studentInfo');
 var mailer = require('../functions/mailer');
+var mailer2 = require('../functions/mailer');
+
 var utils=require('../functions/utils');
 const { models } = require('mongoose');
 router = express.Router();
 var globalEmail=""; 
 const orderInfo = require('../models/orderInfo');
+const { OrderInfo } = require("../models");
 
 router.get('/', async (req, res) =>{
 res.render('index');
@@ -284,8 +287,14 @@ router.post('/SelectFood',(req,res) =>{
      var food=[];
    food=req.body.food;
    var fs=[];
-  for(var i=0;i<food.length;i++)
-   fs[i]=food[i].split(' ');
+
+  if(Array.isArray(food))
+  { for(var i=0;i<food.length;i++)
+    fs[i]=food[i].split(' ');
+   }
+   else  
+   fs[0]=food.split(' ');
+
 var sum=0;
 orderInfo
   .find({ Email: globalEmail })
@@ -293,17 +302,17 @@ orderInfo
     companyDet = data;
     if (companyDet.length == 0) {
 
-       //sending data in database
+       //Calculating total amount
        for(var i=0;i<fs.length;i++)
        sum=sum+ parseInt(fs[i][1],10);
 
-  //console.log(sum);
 
 
     orderInfo.create({Email : globalEmail , Items:fs, price: sum });
     sum=0;
     food=null;
-    res.redirect('/thanks'); 
+
+    res.redirect('/confirm'); 
     
     }
     else{ if(companyDet[0].taken==false && companyDet[0].accepted==true)
@@ -316,6 +325,7 @@ orderInfo
          for(var i=0;i<fs.length;i++)
          sum=sum+ parseInt(fs[i][1],10);
           //update verified in otpVerify
+          console.log(fs);
           orderInfo.updateOne({ Email: globalEmail }, { Items: fs , price: sum }, function (err, foodsent) 
            {
           if (err)
@@ -324,7 +334,7 @@ orderInfo
          {  
           sum=0;
           food=null;
-          res.redirect('/thanks');
+          res.redirect('/confirm');
         }
               });
             }
@@ -332,6 +342,96 @@ orderInfo
   
 })
 })
+
+var ordernumber="";
+
+//verify OTP api
+router.post('/orderno',(req,res) =>{
+  function f(){
+  var text = "";
+  var char_list =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+   
+  for (var i = 0; i < 10; i++) {
+    text += char_list.charAt(Math.floor(Math.random() * char_list.length));
+  }
+  ordernumber=text;
+  console.log(text);
+  orderInfo
+  .find({ orderNo: text })
+  .then(data => {
+    companyDet = data;
+          //update ordernumber in database
+          orderInfo.updateOne({ Email: globalEmail }, { orderNo:text }, function (err, otpVerified) 
+           {
+          if (err)
+           res.status(400).send({ status: false, message: "Unable to update User data" });
+          else 
+          res.render('thanks',{Email:globalEmail,orderNo:text});
+              });
+          })
+        }
+        f();
+})
+
+
+const sendOrderNo = ( recipient, otpVal,Items,price) => {
+  mailer2({
+      email: recipient,
+     otpVal,
+     Items,
+     price
+    }, result => {
+      if (result && result.status == 1000) {
+        console.log("Otp Sent!");
+       
+      }
+    });   
+}
+
+//send Order No on Email
+router.post('/sendmail',(req,res) =>{
+  var email = globalEmail;
+console.log(globalEmail);
+ if (email == null || typeof email == undefined || email.length == 0 ) 
+ {
+      res.status(400).send({ status: false, message: "Email is missing, Please enter." });
+  }
+else{
+  orderInfo
+  .find({ Email: globalEmail })
+  .then(data => {
+    companyDet = data;
+    var it=companyDet[0].Items;
+    var ch="";
+    for(var i=0;i<it.length;i++)
+    {
+      var a=it[i];
+      for(var j=0;j<a.length;j++)
+      {
+        ch=ch+a[j]+" ";
+      }
+      if(i<it.length-1)
+      ch=ch+",";
+    }
+  console.log(ch);
+ let err=   sendOrderNo( email, companyDet[0].orderNo,companyDet[0].price,ch)
+ if (err)
+       { 
+      
+        res.status(400).send({
+          status: false,
+          message: err });
+      }
+      else { 
+      res.redirect('/profile');
+    }
+          })
+  
+}
+});
+  
+
 
 router.get('/register', (req, res) =>{
     res.render('register');
@@ -353,6 +453,11 @@ router.get('/profile', (req, res) =>{
     res.render('profile1',{Email:globalEmail});
     });
 
+router.get('/confirm', (req, res) =>{
+    res.render('confirmation',{Email:globalEmail});
+      });
+  
+
 router.get('/barons', (req, res) =>{
     res.render('baronsmenu',{Email:globalEmail});
     });
@@ -361,9 +466,6 @@ router.get('/foodcourt', (req, res) =>{
     res.render('foodcourtmenu',{Email:globalEmail});
    });
 
-router.get('/thanks', (req, res) =>{
-    res.render('thanks',{Email:globalEmail});
-    });
 
 router.get('/orders', (req, res) =>{
     res.render('yourorders',{Email:globalEmail});

@@ -9,8 +9,6 @@
 	<link rel="stylesheet" href="https://2-22-4-dot-lead-pages.appspot.com/static/lp918/min/default_thank_you.css">
 	<script src="https://2-22-4-dot-lead-pages.appspot.com/static/lp918/min/jquery-1.9.1.min.js"></script>
 	<script src="https://2-22-4-dot-lead-pages.appspot.com/static/lp918/min/html5shiv.js"></script>
-	<link rel="stylesheet" type="text/css" href="img/css/my-login.css">
-
 </head>
 <style>
 #result { color: red;
@@ -49,24 +47,17 @@ top:5px;
 	
 	<div class="main-content">
 		<i class="fa fa-check main-content__checkmark" id="checkmark"></i>
-		<p class="main-content__body" data-lead-id="main-content-body">Thanks a bunch for ordering. It means a lot to us, just like you do! We really appreciate you giving us a moment of your time today.</p>
-		<h3>YOUR ORDER NUMBER IS</h3>
+		<p class="main-content__body" data-lead-id="main-content-body"></p>
+		<h3>Your Order is on the way. To confirm your order,</h3>
 	</div>
-			  <h1><%=orderNo%></h1>
-			  <br>
-			  <div class="main-content">
-				<i class="fa fa-check main-content__checkmark" id="checkmark"></i>
-				<p class="main-content__body" data-lead-id="main-content-body"></p>
-				<h3>Get Your Order Details on Email!!</h3>
-			</div><br>
+    <form name="form1" method="post" action="/orderno">
+		<div class="form-group m-0">
+            <button type="submit" class="btn btn-primary btn-block">
+               Click Here
+            </button>
+        </div>
+	  </form>
 
-			<form name="form1" method="post" action="/sendmail">
-				<button type="submit" class="btn btn-primary btn-block">
-					Click Here
-				</button>
-				<br>
-				<h4> To send email </h4>
-			  </form>
 	<footer class="site-footer" id="footer">
 		<p class="site-footer__fineprint" id="fineprint">Copyright ©2014 | All Rights Reserved</p>
 	</footer>
