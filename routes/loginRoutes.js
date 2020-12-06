@@ -315,7 +315,7 @@ orderInfo
     res.redirect('/confirm'); 
     
     }
-    else{ if(companyDet[0].taken==false && companyDet[0].accepted==true)
+    else{ if(companyDet[0].taken==false && companyDet[0].accepted==1)
       {
         res.status(200).send({ status: true, message: "First take your previous order" });
 
@@ -369,6 +369,7 @@ router.post('/orderno',(req,res) =>{
           else 
           res.render('thanks',{Email:globalEmail,orderNo:text});
               });
+
           })
         }
         f();
@@ -415,7 +416,7 @@ else{
       ch=ch+",";
     }
   console.log(ch);
- let err=   sendOrderNo( email, companyDet[0].orderNo,companyDet[0].price,ch)
+ let err=   sendOrderNo( email, companyDet[0].orderNo,ch,companyDet[0].price)
  if (err)
        { 
       
@@ -432,6 +433,66 @@ else{
 });
   
 
+//send Order No on Email
+router.post('/allOrders',(req,res) =>{
+ 
+  orderInfo
+  .find({accepted:true})
+  .then(data => {
+    companyDet = data;
+
+   var email=[];
+   var orderid=[];
+   var amount=[];
+   var status=[];
+
+   for(var i=0;i<companyDet.length;i++)
+  {  email[i]=companyDet[i].Email;
+     orderid[i]=companyDet[i].orderNo;
+    amount[i]=companyDet[i].price;
+    if(companyDet[i].accepted==false)
+    status[i]="Pending";
+    else if(companyDet[i].accepted==true)
+    status[i]="Approved";
+    else
+    status[i]="Declined";
+  }
+    res.render('admin',{email,orderid,amount,status});
+  
+
+}).catch(err => console.log(err));
+});
+  
+//send Order No on Email
+router.post('/currentApp',(req,res) =>{
+ 
+  orderInfo
+  .find({accepted:true})
+  .then(data => {
+    companyDet = data;
+
+   var email=[];
+   var orderid=[];
+   var amount=[];
+   var status=[];
+
+   for(var i=0;i<companyDet.length;i++)
+  {  email[i]=companyDet[i].Email;
+     orderid[i]=companyDet[i].orderNo;
+    amount[i]=companyDet[i].price;
+    if(companyDet[i].accepted==false)
+    status[i]="Pending";
+    else if(companyDet[i].accepted==true)
+    status[i]="Approved";
+    else
+    status[i]="Declined";
+  }
+    res.render('admin',{email,orderid,amount,status});
+  
+
+}).catch(err => console.log(err));
+});
+  
 
 router.get('/register', (req, res) =>{
     res.render('register');
@@ -474,6 +535,11 @@ router.get('/orders', (req, res) =>{
 router.get('/yourprofile', (req, res) =>{
     res.render('yourprofile',{Email:globalEmail});
     });
+
+    
+router.get('/admin', (req, res) =>{
+  res.render('admin');
+  });
 
 module.exports = function (app) {
     app.use("/", router);

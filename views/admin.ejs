@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<style>
+* {box-sizing: border-box}
+
+/* Set height of body and the document to 100% */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial;
+}
+
+/* Style tab links */
+.tablink {
+  background-color: black;
+  color: white;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 20px;
+  width: 33.3%;
+}
+
+.tablink:hover {
+  background-color: #777;
+}
+
+/* Style the tab content (and add height:100% for full page content) */
+.tabcontent {
+  color: black;
+  display: none;
+  padding: 100px 20px;
+  height: 100%;
+}
+
+
+
+#CApproved {background-color: #FAFAD2;}
+#CPending {background-color: #FAFAD2;}
+#All {background-color: #FFFFE0;}
+</style>
+</head>
+<body>
+
+<button class="tablink" onclick="openPage('CApproved', this, 'red')">CURRENT APPROVED</button>
+<button class="tablink" onclick="openPage('CPending', this, 'green')" id="defaultOpen">CURRENT PENDING</button>
+<button class="tablink" onclick="openPage('All', this, 'blue')">ALL ORDERS</button>
+
+<div id="CApproved" class="tabcontent">
+  <div class="container">
+   
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">
+  <br>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>SAP ID</th>
+        <th>ORDER ID</th>
+        <th>AMOUNT</th>
+      </tr>
+      <% for(var i=0; i < email.length; i++) { %> 
+        <tr>
+          <td><%=email[i]%></td>
+          <td><%=orderid[i]%></td>
+  
+          <td><%=amount[i]%></td>
+          
+        </tr>	
+        <%}%>
+    </thead>
+    <tbody id="myTable">
+      
+      
+    </tbody>
+  </table>
+  
+</div>
+
+
+</div>
+
+<div id="CPending" class="tabcontent">
+   <div class="container">
+   
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">
+  <br>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>SAP ID</th>
+        <th>ORDER ID</th>
+        <th>AMOUNT</th>
+		<th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+      <% for(var i=0; i < email.length; i++) { %> 
+        <tr>
+          <td><%=email[i]%></td>
+          <td><%=orderid[i]%></td>
+  
+          <td><%=amount[i]%></td>
+          <td>
+              <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-primary" name="btn1">APPROVE</button>
+              <button type="button" class="btn btn-primary" name="btn2">DISCARD</button>
+              </div>
+          </td>
+        </tr>	
+        <%}%>
+      
+  
+    </tbody>
+  </table>
+  
+</div>
+</div>
+
+<div id="All" class="tabcontent">
+   <div class="container">
+   
+  <input class="form-control" id="myInput" type="text" placeholder="Search..">
+  <br>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>SAP ID</th>
+        <th>ORDER ID</th>
+        <th>AMOUNT</th>
+		<th>STATUS</th>
+      </tr>
+    </thead>
+    <tbody id="myTable">
+      <% for(var i=0; i < email.length; i++) { %> 
+        <tr>
+          <td><%=email[i]%></td>
+          <td><%=orderid[i]%></td>
+  
+          <td><%=amount[i]%></td>
+          <td><%=status[i]%></td>
+          
+        </tr>	
+        <%}%>
+    </tbody>
+  </table>
+  
+</div>
+</div>
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    })
+  })
+})
+
+function openPage(pageName,elmnt,color) {
+  if(pageName=="CApproved")
+  {
+    fetch('http://localhost:3005/currentApp')
+    .then((response)=> {
+      console.log("Done",response.data);
+    })
+  }
+  else if(pageName=="CPending")
+  {
+
+  }
+  else if(pageName=="All")
+  {
+
+  }
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].style.backgroundColor = "";
+  }
+  document.getElementById(pageName).style.display = "block";
+  elmnt.style.backgroundColor = color;
+}
+
+// Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+</script>
+   
+</body>
+</html> 
