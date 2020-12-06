@@ -437,7 +437,7 @@ else{
 router.post('/allOrders',(req,res) =>{
  
   orderInfo
-  .find({accepted:true})
+  .find({})
   .then(data => {
     companyDet = data;
 
