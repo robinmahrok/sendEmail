@@ -6,7 +6,44 @@
 	<title>College Canteen</title>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="img/css/my-login.css">
-
+	<style>
+		
+		
+		/* Set height of body and the document to 100% */
+		.tab {
+			color: red;
+		  font-family: Arial;
+		}
+</style>	
+<script>
+	function ValidateEmail(email,password)
+	{
+		var mailformat = /^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/;
+		var passformat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/;
+	if(email.value.match(mailformat))
+	{
+		if(password.value.match(passformat))
+		{
+			let response = fetch('/login');
+			console.log(response);
+			document.form1.text1.focus();
+			return true;
+		}
+		else
+		{
+			alert("Password should contains atleast 6 characters consists of uppercase,lowercase,number and character");
+		 document.form1.text1.focus();
+		 return false;
+		}
+	}
+	else
+	{
+	alert("You have entered an invalid email address!");
+	document.form1.text1.focus();
+	return false;
+	}
+	}
+		</script>	
 </head>
 
 <body class="my-login-page">
@@ -19,15 +56,16 @@
 					</div>
 					<div class="card fat">
 						<div class="card-body">
+							<label class="tab"> 
+								<h6><%var c=error%></h6>
+							</label>
 							<h2 class="card-title">Welcome!!</h2>
 							<h4>Login</h4>
-							<form method="POST" class="my-login-validation" novalidate="" name="form1" action="/login" >
+							<form method="POST" class="my-login-validation" name="form2" action="/login" >
 								<div class="form-group">
 									<label for="email">E-Mail Address</label>
-									<input id="email" type="email" class="form-control" name="email" value="" required autofocus>
-									
+									<input id="email" type="email" class="form-control" name="email" required autofocus>
 								</div>
-
 								<div class="form-group">
 									<label for="password">Password <br>
 										
@@ -35,34 +73,7 @@
 									<input id="password" type="password" class="form-control" name="password" required data-eye>
 								    
 								</div>
-								<script>
-								function ValidateEmail(email,password)
-								{
-								var mailformat = /^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/;
-								var passformat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/;
-								if(email.value.match(mailformat))
-								{
-									if(password.value.match(passformat))
-									{
-										let response = fetch('/login');
-										console.log(response);
-										document.form1.text1.focus();
-										return true;
-									}
-									else
-									{alert("Password should contains atleast 6 characters consists of uppercase,lowercase,number and character");
-									 document.form1.text1.focus();
-									 return false;
-								}
-								}
-								else
-								{
-								alert("You have entered an invalid email address!");
-								document.form1.text1.focus();
-								return false;
-								}
-								}
-									</script>
+								
 								<div class="form-group">
 									<div class="custom-checkbox custom-control">
 										<a href="/forgot" class="float-right">
@@ -76,7 +87,7 @@
 								</div>
 
 								<div class="form-group m-0">
-									<button type="submit" class="btn btn-primary btn-block" onclick="return ValidateEmail(document.form1.email,document.form1.password)">
+									<button type="submit" class="btn btn-primary btn-block" onclick="return ValidateEmail(document.form2.email,document.form2.password)">
 										Login
 									</button>
 								</div>

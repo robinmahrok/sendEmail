@@ -66,7 +66,7 @@ body, html {
         <th>ORDER ID</th>
         <th>AMOUNT</th>
       </tr>
-      <% for(var i=0; i < email.length; i++) { if(status[i]=='Approved') {%> 
+      <% for(var i=0; i < email.length; i++) { if(status[i]=="Approved") {%> 
         <tr>
           <td><%=email[i]%></td>
           <td><%=orderid[i]%></td>
@@ -102,7 +102,7 @@ body, html {
       </tr>
     </thead>
     <tbody id="myTable">
-      <% for(var i=0; i < email.length; i++) { if(status[i]=='Pending'){%> 
+      <% for(var i=0; i < email.length; i++) { if(status[i]=="Pending"){%> 
         <tr>
           <td><%=email[i]%></td>
           <td><%=orderid[i]%></td>
@@ -111,7 +111,7 @@ body, html {
           <td>
               <div class="btn-group" role="group" aria-label="Basic example">
               <button type="button" class="btn btn-primary" name="btn1" style="margin-right: 10px;" onclick="approveOrder('<%=orderid[i]%>')">APPROVE</button>
-              <button type="button" class="btn btn-danger" name="btn2">DISCARD</button>
+              <button type="button" class="btn btn-danger" name="btn2" onclick="declineOrder('<%=orderid[i]%>')">DISCARD</button>
               </div>
           </td>
         </tr>	
@@ -167,7 +167,7 @@ $(document).ready(function(){
 
 function approveOrder(orderid){
   // import axios from 'axios';
-  axios.get('http://localhost:3005/updateOrder/'+orderid)
+  axios.get('http://localhost:3005/AcceptOrder/'+orderid)
   .then((res)=>{
     console.log(res.data.message);
     if(confirm('Order Accepted Successfully!')){
@@ -177,14 +177,22 @@ function approveOrder(orderid){
   .catch((err)=>{
     console.log(err);
   })
-  // fetch('http://localhost:3005/updateOrder',{
-  //   method: 'post',
-  //   body: JSON.stringify(orderid)
-  // })
-  // .then((res)=>{
-  //   console.log(res.data.message);
-  //   alert(res.data.message);
-  // })
+  console.log(orderid);
+}
+
+
+function declineOrder(orderid){
+  // import axios from 'axios';
+  axios.get('http://localhost:3005/DeclineOrder/'+orderid)
+  .then((res)=>{
+    console.log(res.data.message);
+    if(confirm('Order Declined Successfully!')){
+    window.location.reload();  
+}
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
   console.log(orderid);
 }
 

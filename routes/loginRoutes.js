@@ -10,8 +10,9 @@ var globalEmail="";
 const orderInfo = require('../models/orderInfo');
 const { OrderInfo } = require("../models");
 
+var error="";
 router.get('/', async (req, res) =>{
-res.render('index');
+res.render('index',{error});
 });
 
 //signup api
@@ -217,11 +218,14 @@ router.post('/forgotPassword',(req,res) =>{
   
 // login api starts
 router.post('/login', (req,res) =>{
+  error="";
     var email=req.body.email,
     password=req.body.password;
    if (req.body.email == null || typeof req.body.email == undefined || req.body.email.length == 0 ||
       req.body.password == null || typeof req.body.password == undefined || req.body.password.length == 0) {
-      res.redirect('/');
+        error="Enter email/password";
+      res.render('index',{error});
+      error="";
       }
 
 globalEmail=email;
@@ -235,6 +239,7 @@ function emailCheck (password1) {
 return (/^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/).test(password1)
 };
 var hashedpass=""
+ error="Email/Password Incorrect";
 // checking email and password criteria
 if(!!emailCheck(email))
 {  
@@ -245,13 +250,18 @@ if(!!passwordCheck(password))
     .then(data => {
       companyDet = data;
       if (companyDet.length == 0) {
-      res.status(400).send({ status: false, message: "No User found" });
+error="Incorrect email/password";
+        res.render('index',{error});
+        
+    //  res.status(400).send({ status: false, message: "No User found" });
+    error="";
       }
     else {
        var dbpass= companyDet[0].Password;
        var otpver=companyDet[0].OtpVerify;
        utils.validatePassword(password, dbpass, function (err, data) {
-        if (!err && data) {
+        if (!err && data) 
+        {
         if(otpver=="Verified")
         {
           res.redirect('/profile');
@@ -264,19 +274,24 @@ if(!!passwordCheck(password))
         }
       }
     else
-      res.status(400).send({status: false , message:"EMail/Password incorrect"});
+    { 
+      res.render('index',{error});
+   
+  }
     })
    }
   })
  }
 else
- {
-  res.redirect('/');
+ { error="";
+  res.render('index',{error});
+   
  }
 }
 else
- {
-  res.redirect('/');
+ {   error="";
+  res.render('index',{error});
+ 
  }
 });
 //login api ends
@@ -318,7 +333,6 @@ orderInfo
     else{ if(companyDet[0].taken==false && companyDet[0].accepted==1)
       {
         res.status(200).send({ status: true, message: "First take your previous order" });
-
       }
       else{
          //sending data in database
@@ -450,11 +464,11 @@ router.post('/allOrders',(req,res) =>{
   {  email[i]=companyDet[i].Email;
      orderid[i]=companyDet[i].orderNo;
     amount[i]=companyDet[i].price;
-    if(companyDet[i].accepted==false)
+    if(companyDet[i].accepted==0)
     status[i]="Pending";
-    else if(companyDet[i].accepted==true)
+    else if(companyDet[i].accepted==1)
     status[i]="Approved";
-    else
+    else if(companyDet[i].accepted==-1)
     status[i]="Declined";
   }
     res.render('admin',{email,orderid,amount,status});
@@ -463,7 +477,7 @@ router.post('/allOrders',(req,res) =>{
 }).catch(err => console.log(err));
 });
  
-router.get('/updateOrder/:orderNo', (req,res)=>{
+router.get('/AcceptOrder/:orderNo', (req,res)=>{
   // console.log(req.params.orderNo);
   orderInfo.findOne({orderNo: req.params.orderNo})
   .exec((err,order)=>{
@@ -476,43 +490,32 @@ router.get('/updateOrder/:orderNo', (req,res)=>{
       return;
     }
     if(order){
-      order.accepted = true;
+      order.accepted = 1;
       order.save();
       res.status(200).send({message:'Success'});
     }
   })
 })
 
-//send Order No on Email
-router.post('/currentApp',(req,res) =>{
- 
-  orderInfo
-  .find({accepted:true})
-  .then(data => {
-    companyDet = data;
-
-   var email=[];
-   var orderid=[];
-   var amount=[];
-   var status=[];
-
-   for(var i=0;i<companyDet.length;i++)
-  {  email[i]=companyDet[i].Email;
-     orderid[i]=companyDet[i].orderNo;
-    amount[i]=companyDet[i].price;
-    if(companyDet[i].accepted==false)
-    status[i]="Pending";
-    else if(companyDet[i].accepted==true)
-    status[i]="Approved";
-    else
-    status[i]="Declined";
-  }
-    res.render('admin',{email,orderid,amount,status});
-  
-
-}).catch(err => console.log(err));
-});
-  
+router.get('/DeclineOrder/:orderNo', (req,res)=>{
+  // console.log(req.params.orderNo);
+  orderInfo.findOne({orderNo: req.params.orderNo})
+  .exec((err,order)=>{
+    if(err){
+      res.status(404).send({message:err})
+      return;
+    }
+    if(!order){
+      res.status(404).send({message: 'Order not Found'})
+      return;
+    }
+    if(order){
+      order.accepted = -1;
+      order.save();
+      res.status(200).send({message:'Success'});
+    }
+  })
+})
 
 router.get('/register', (req, res) =>{
     res.render('register');

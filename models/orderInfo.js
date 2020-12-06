@@ -21,8 +21,8 @@ orderNo:
 },
 accepted :
 {
-    type:Boolean,
-    default:false
+    type:Number,
+    default:0
 },
 },{ timestamps: true });
 
