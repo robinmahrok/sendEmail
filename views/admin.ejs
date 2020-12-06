@@ -110,8 +110,8 @@ body, html {
           <td><%=amount[i]%></td>
           <td>
               <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-primary" name="btn1">APPROVE</button>
-              <button type="button" class="btn btn-primary" name="btn2">DISCARD</button>
+              <button type="button" class="btn btn-primary" name="btn1" style="margin-right: 10px;" onclick="approveOrder('<%=orderid[i]%>')">APPROVE</button>
+              <button type="button" class="btn btn-danger" name="btn2">DISCARD</button>
               </div>
           </td>
         </tr>	
@@ -154,7 +154,7 @@ body, html {
   
 </div>
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js" integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ==" crossorigin="anonymous"></script>
 <script>
 $(document).ready(function(){
   $("#myInput").on("keyup", function() {
@@ -165,22 +165,30 @@ $(document).ready(function(){
   })
 })
 
+function approveOrder(orderid){
+  // import axios from 'axios';
+  axios.get('http://localhost:3005/updateOrder/'+orderid)
+  .then((res)=>{
+    console.log(res.data.message);
+    if(confirm('Order Accepted Successfully!')){
+    window.location.reload();  
+}
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+  // fetch('http://localhost:3005/updateOrder',{
+  //   method: 'post',
+  //   body: JSON.stringify(orderid)
+  // })
+  // .then((res)=>{
+  //   console.log(res.data.message);
+  //   alert(res.data.message);
+  // })
+  console.log(orderid);
+}
+
 function openPage(pageName,elmnt,color) {
-  // if(pageName=="CApproved")
-  // {
-  //   fetch('http://localhost:3005/currentApp')
-  //   .then((response)=> {
-  //     console.log("Done",response.data);
-  //   })
-  // }
-  // else if(pageName=="CPending")
-  // {
-
-  // }
-  // else if(pageName=="All")
-  // {
-
-  // }
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
   for (i = 0; i < tabcontent.length; i++) {

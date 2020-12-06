@@ -462,7 +462,27 @@ router.post('/allOrders',(req,res) =>{
 
 }).catch(err => console.log(err));
 });
-  
+ 
+router.get('/updateOrder/:orderNo', (req,res)=>{
+  // console.log(req.params.orderNo);
+  orderInfo.findOne({orderNo: req.params.orderNo})
+  .exec((err,order)=>{
+    if(err){
+      res.status(404).send({message:err})
+      return;
+    }
+    if(!order){
+      res.status(404).send({message: 'Order not Found'})
+      return;
+    }
+    if(order){
+      order.accepted = true;
+      order.save();
+      res.status(200).send({message:'Success'});
+    }
+  })
+})
+
 //send Order No on Email
 router.post('/currentApp',(req,res) =>{
  
