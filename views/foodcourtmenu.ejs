@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html id="current">
 	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Welcome to Barons!!!</title>
-		<link rel="icon" href="http://localhost/WTProject/Home/title.png" type="image/x-icon">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<style>
 			* {
@@ -216,10 +217,9 @@ top:5px;
   <img style="opacity:100" src="img/spices.png" alt="Main Image" width="100%" height="400" />
   <div class="ncenter"></div>
 </div>
-<script>
-	
-</script>
-<form align="right" name="form1" method="get" action="/">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js" integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ==" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<form name="form1" method="get" action="/">
     <label class="logoutLblPos">
     <input name="submit2" type="submit" id="submit2" value="Log out">
     </label>
@@ -232,7 +232,7 @@ top:5px;
 <div style="overflow:auto">
   
 			<div class="main">
-				<form action="/SelectFood" method="post">
+				<form name="foodtab" action="/SelectFood" method="POST">
 					<table class="t"  >
 						<tr margin="2px" ></tr>
 							<td rowspan="3" width="20%" ><img src="img/pavbhaji.jpg" width="120px" height="120px" ></td>
@@ -378,8 +378,9 @@ top:5px;
 							<td rowspan="2"><label class="container"><input type="checkbox" name="food" value="Samosa 20" /><span class="checkmark"></span></label></td>
 						</tr>
 					</table>
+				
 					<br />
-					<input type="Submit" class="sub" value="Order Now" />
+					<input type="Submit" class="sub" value="Order Now"/>
 				</form>
 			</div>
 		</div>

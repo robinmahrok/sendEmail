@@ -60,8 +60,8 @@ const mailer2 = (data, cb) => {
         from: '"Panch Pandav" <' + mailSettings.auth.user + ">",
         to: data.email,
         subject: "Your Order Details",
-        html: "<h1>Hello</h1><p>Your Order Number is : </p><b><h2>" + data.otpVal + "</h2></b>" +"<b><p> And Your Items are : </p><b>" + data.Items + "</b>"+
-        "<b><p> And Total Amount is : Rs.<h3>" + data.price + "</h3>"
+        html: "<h1>Hello</h1><p>Your Order Number is : </p><b><h2>" + data.otpVal + "</h2></b>" +"<p> And Your Items are : </p><b>" + data.Items + "</b>"+
+        "<p> And Total Amount is : Rs.<h3><b>" + data.price + "</h3></b></p>"
     };
   
     transporter.sendMail(mailOptions, (error, info) => {
@@ -74,6 +74,6 @@ const mailer2 = (data, cb) => {
     });
 };
 
-module.exports =mailer;
-module.exports=mailer2;
+module.exports ={mailer,mailer2};
+//module.exports=mailer2;
 

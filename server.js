@@ -1,10 +1,10 @@
 const express = require('express');
-const app = express();
 const Mongoose = require('mongoose');
 const { dbURL } = require(`./config/config`);
 const routes = require('./routes/index.js');
 var bodyParser = require('body-parser');
-
+const session = require('express-session')
+const app = express();
 
 Mongoose.connect(dbURL,
   {
@@ -13,6 +13,13 @@ Mongoose.connect(dbURL,
   useCreateIndex:true
   });
   
+  app.use(session({
+     secret: 'ssshhhhh',
+     resave:false,
+     saveUninitialized:false
+}
+  ));
+
   app.set('view engine', 'ejs');
   app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));

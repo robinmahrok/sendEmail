@@ -56,9 +56,7 @@ body, html {
 
 <div id="CApproved" class="tabcontent">
   <div class="container">
-   
-  <input class="form-control" id="myInput" type="text" placeholder="Search..">
-  <br>
+ 
   <table class="table table-bordered table-striped">
     <thead>
       <tr>
@@ -77,21 +75,14 @@ body, html {
         <%}}%>
     </thead>
     <tbody id="myTable">
-      
-      
     </tbody>
   </table>
-  
 </div>
-
-
 </div>
 
 <div id="CPending" class="tabcontent">
    <div class="container">
-   
-  <input class="form-control" id="myInput" type="text" placeholder="Search..">
-  <br>
+
   <table class="table table-bordered table-striped">
     <thead>
       <tr>
@@ -106,7 +97,6 @@ body, html {
         <tr>
           <td><%=email[i]%></td>
           <td><%=orderid[i]%></td>
-  
           <td><%=amount[i]%></td>
           <td>
               <div class="btn-group" role="group" aria-label="Basic example">
@@ -116,19 +106,14 @@ body, html {
           </td>
         </tr>	
         <%}}%>
-      
-  
     </tbody>
   </table>
-  
 </div>
 </div>
 
 <div id="All" class="tabcontent">
    <div class="container">
-   
-  <input class="form-control" id="myInput" type="text" placeholder="Search..">
-  <br>
+  
   <table class="table table-bordered table-striped">
     <thead>
       <tr>
@@ -143,28 +128,27 @@ body, html {
         <tr>
           <td><%=email[i]%></td>
           <td><%=orderid[i]%></td>
-  
           <td><%=amount[i]%></td>
           <td><%=status[i]%></td>
-          
         </tr>	
         <%}%>
     </tbody>
   </table>
-  
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js" integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ==" crossorigin="anonymous"></script>
 <script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    })
-  })
-})
-
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myTable").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+  </script>
+  
+<script>
 function approveOrder(orderid){
   // import axios from 'axios';
   axios.get('http://localhost:3005/AcceptOrder/'+orderid)

@@ -1,7 +1,7 @@
 const express = require("express");
 const studentInfo = require('../models/studentInfo');
-var mailer = require('../functions/mailer');
-var mailer2 = require('../functions/mailer');
+var {mailer} = require('../functions/mailer');
+var {mailer2} = require('../functions/mailer');
 
 var utils=require('../functions/utils');
 const { models } = require('mongoose');
@@ -9,6 +9,7 @@ router = express.Router();
 var globalEmail=""; 
 const orderInfo = require('../models/orderInfo');
 const { OrderInfo } = require("../models");
+var JSAlert = require("js-alert");
 
 var error="";
 router.get('/', async (req, res) =>{
@@ -17,16 +18,17 @@ res.render('index',{error});
 
 //signup api
 router.post('/signup',   (req,res)=>{
+  req.session.email1 = req.body.email;
         var name=req.body.name, email = req.body.email,
         password=req.body.password;
         if (req.body.name == null || typeof req.body.name == undefined || req.body.name == "") {
-            res.status(400).send({ status: false, message: "Please enter firstName" });
+          res.render('register-err-success',{success:1,message:"Email or Password is missing"});
           } else if (req.body.email == null || typeof req.body.email == undefined || req.body.email.length == 0 ||
             req.body.password == null || typeof req.body.password == undefined || req.body.password.length == 0) {
-            res.status(400).send({ status: false, message: "Email or Password is missing, Please enter." });
+              res.render('register-err-success',{success:1,message:"Email or Password is missing"});
             }
 
-    globalEmail=email;
+    globalEmail=req.session.email1;
 
 //password check with Minimum six characters, at least one uppercase letter, one lowercase letter, one number and one special character
 function passwordCheck (password1) {
@@ -86,7 +88,7 @@ res.redirect('/register');
 }
 
 } else {
-  res.status(400).send({ status:false, message:"User Already Exists"});
+  res.render('register-err-success',{success:0,message:"User already exists"});
 }
   })
 })  //signup api end
@@ -109,8 +111,10 @@ const sendOTP = ( recipient, otpVal, callback) => {
 
 //send and update otp in database api
 router.post('/sendOtp',(req,res) =>{
+  if(req.session.email1)
+  {
     var email = req.body.email
-globalEmail=email;
+globalEmail=req.session.email1;
 
    if (req.body.email == null || typeof req.body.email == undefined || req.body.email.length == 0 ) 
    {
@@ -119,7 +123,8 @@ globalEmail=email;
 else{
     studentInfo.getUserByEmail(email, (err, user) => {
         if (err || !user) {
-          res.status(400).send({ status: false, message: "User not found" });
+          res.write('<h1>User not found. Login again from link provided below.</h1>');
+  res.end('<a href='+'/'+'>Login</a>');
         } else {
 
               function  genOTP (min, max)  {
@@ -150,11 +155,17 @@ else{
         }
     })
   }
+}
+else{
+  res.write('<h1>Your session is expired. Please login again to continue.</h1>');
+  res.end('<a href='+'/'+'>Login</a>');
+}
 });
     
 //verify OTP api
  router.post('/otpVerify',(req,res) =>{
-     
+  if(req.session.email1)
+  {
     var userotp=req.body.otp;
 studentInfo
     .find({ Email: globalEmail, Otp:userotp })
@@ -176,13 +187,19 @@ studentInfo
                 });
         }    
     })
+  }
+  else{
+    res.write('<h1>Your session is expired. Please login again to continue.</h1>');
+    res.end('<a href='+'/'+'>Login</a>');
+  }
 })
  
 
 
 // change password api
 router.post('/forgotPassword',(req,res) =>{
-
+  if(req.session.email1)
+  {
     var userpass=req.body.password;
 
                 //password check with Minimum six characters, at least one uppercase letter, one lowercase letter, one number and one special character
@@ -201,24 +218,27 @@ router.post('/forgotPassword',(req,res) =>{
                  studentInfo.updateOne({ Email: globalEmail }, { Password: hashedpass }, function (err, passwordUpdate) 
                  {
                     if (err) res.status(400).send({ status: false, message: "Unable to update User data" });
-                    else passwordUpdate.length != 0;
+                    else if(passwordUpdate.length != 0) 
                     {
-                      var result = {
-                        status: true,
-                        message: "Your Password Updated successfully."
-                      };
-                      res.status(200).send(result);
+                      res.write('<h1>Your Password is updated Successfully. Please login again to continue.</h1>');
+                      res.end('<a href='+'/'+'>Login</a>');
                     }
                   })
                 }
                 else res.status(400).send({ status:false , message:"Password doesn't met requirement"});
         });
     }
+  }
+    else{
+      res.write('<h1>Your session is expired. Please login again to continue.</h1>');
+      res.end('<a href='+'/'+'>Login</a>');
+    }
 });
   
 // login api starts
 router.post('/login', (req,res) =>{
   error="";
+  req.session.email1 = req.body.email;
     var email=req.body.email,
     password=req.body.password;
    if (req.body.email == null || typeof req.body.email == undefined || req.body.email.length == 0 ||
@@ -250,11 +270,8 @@ if(!!passwordCheck(password))
     .then(data => {
       companyDet = data;
       if (companyDet.length == 0) {
-error="Incorrect email/password";
-        res.render('index',{error});
-        
-    //  res.status(400).send({ status: false, message: "No User found" });
-    error="";
+        res.write('<h1>No User found. Please login again to continue.</h1>');
+        res.end('<a href='+'/'+'>Login</a>');
       }
     else {
        var dbpass= companyDet[0].Password;
@@ -299,8 +316,12 @@ else
 
 //select food api
 router.post('/SelectFood',(req,res) =>{
-     var food=[];
+  if( req.session.email1)
+  {  
+  var food=[];
    food=req.body.food;
+  
+globalEmail=req.session.email1;
    var fs=[];
 
   if(Array.isArray(food))
@@ -332,7 +353,8 @@ orderInfo
     }
     else{ if(companyDet[0].taken==false && companyDet[0].accepted==1)
       {
-        res.status(200).send({ status: true, message: "First take your previous order" });
+       
+        res.render('rejectOrder',{Email:globalEmail})
       }
       else{
          //sending data in database
@@ -355,12 +377,20 @@ orderInfo
       }    
   
 })
+  }
+  else{
+    res.write('<h1>Your session is expired. Please login again to continue.</h1>');
+    res.end('<a href='+'/'+'>Login</a>');
+  }
 })
 
 var ordernumber="";
 
 //verify OTP api
 router.post('/orderno',(req,res) =>{
+  if( req.session.email1)
+  {  
+    globalEmail=req.session.email1;
   function f(){
   var text = "";
   var char_list =
@@ -387,6 +417,12 @@ router.post('/orderno',(req,res) =>{
           })
         }
         f();
+      }
+      else
+      {
+        res.write('<h1>Your session is expired. Please login again to continue.</h1>');
+        res.end('<a href='+'/'+'>Login</a>');
+      }
 })
 
 
@@ -406,13 +442,10 @@ const sendOrderNo = ( recipient, otpVal,Items,price) => {
 
 //send Order No on Email
 router.post('/sendmail',(req,res) =>{
+  
+  if( req.session.email1)
+  {  
   var email = globalEmail;
-console.log(globalEmail);
- if (email == null || typeof email == undefined || email.length == 0 ) 
- {
-      res.status(400).send({ status: false, message: "Email is missing, Please enter." });
-  }
-else{
   orderInfo
   .find({ Email: globalEmail })
   .then(data => {
@@ -442,8 +475,13 @@ else{
       res.redirect('/profile');
     }
           })
-  
-}
+        }
+      else{
+        
+        res.write('<h1>Your session is expired. Please login again to continue.</h1>');
+        res.end('<a href='+'/'+'>Login</a>');
+      }
+
 });
   
 

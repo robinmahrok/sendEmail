@@ -19,6 +19,15 @@
 					</div>
 					<div class="card fat">
 						<div class="card-body">
+							
+								<% if(success==0)
+								{
+									%>
+									<div class="alert alert-danger"> <%=message%></div>
+									<%}
+									else if(success==1)%>
+									<div class="alert alert-danger"> <%=message%></div>
+							
 							<h4 class="card-title">Register</h4>
 							<form method="POST" name="form1" class="my-login-validation" action="/signup">
 								<div class="form-group">

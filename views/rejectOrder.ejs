@@ -24,8 +24,12 @@ right:100px;
 top:5px;
 }
 </style>
+<script>
 
+</script>
 <body>
+
+
 	<form align="right" name="form1" method="get" action="/">
 		<label class="ema">
 			<%=Email%>
@@ -34,20 +38,15 @@ top:5px;
 		<input name="submit2" type="submit" id="submit2" value="Log out">
 		</label>
 </form>
-	<header class="site-header" id="header">
-		<h1 class="site-header__title" data-lead-id="site-header-title">THANK YOU!</h1>
-	</header>
-
-	
 	<div class="main-content">
 		<i class="fa fa-check main-content__checkmark" id="checkmark"></i>
 		<p class="main-content__body" data-lead-id="main-content-body"></p>
-		<h3>Your Order is on the way. To confirm your order,</h3>
+		<h1>Take Your Previous Order First</h1>
 	</div>
-    <form name="form1" method="post" action="/orderno">
+    <form name="form1" method="get" action="/profile">
 		<div class="form-group m-0">
-            <button type="submit" class="btn btn-primary btn-block" width="20px" height="15px">
-               Click Here
+            <button type="submit" class="btn btn-primary btn-block">
+               Click Here to Go Back
             </button>
         </div>
 	  </form>
