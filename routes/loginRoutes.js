@@ -1,7 +1,7 @@
 const express = require("express");
 const studentInfo = require('../models/studentInfo');
 var {mailer} = require('../functions/mailer');
-var {mailer2} = require('../functions/mailer');
+var {mailer2,mailer3,mailer4} = require('../functions/mailer');
 
 var utils=require('../functions/utils');
 const { models } = require('mongoose');
@@ -270,8 +270,7 @@ if(!!passwordCheck(password))
     .then(data => {
       companyDet = data;
       if (companyDet.length == 0) {
-        res.write('<h1>No User found. Please login again to continue.</h1>');
-        res.end('<a href='+'/'+'>Login</a>');
+        res.render('index-err-success',{success:0,message:"User Not Found!!"});
       }
     else {
        var dbpass= companyDet[0].Password;
@@ -292,7 +291,7 @@ if(!!passwordCheck(password))
       }
     else
     { 
-      res.render('index',{error});
+      res.render('index-err-success',{success:0,message:"Wrong Credentials!"});
    
   }
     })
@@ -313,6 +312,17 @@ else
 });
 //login api ends
 
+router.post('/selectRestraw',(req,res) =>{
+  if(req.session.email1)
+  {
+    var rest=req.body.rest;
+    console.log(rest);
+  }
+  else{
+    res.write('<h1>Your session is expired. Please login again to continue.</h1>');
+    res.end('<a href='+'/'+'>Login</a>');
+  }
+})
 
 //select food api
 router.post('/SelectFood',(req,res) =>{
@@ -351,7 +361,7 @@ orderInfo
     res.redirect('/confirm'); 
     
     }
-    else{ if(companyDet[0].taken==false && companyDet[0].accepted==1)
+    else{ if(companyDet[0].taken==0 && companyDet[0].accepted==1)
       {
        
         res.render('rejectOrder',{Email:globalEmail})
@@ -497,7 +507,9 @@ router.post('/allOrders',(req,res) =>{
    var orderid=[];
    var amount=[];
    var status=[];
-
+   var take=[];
+   var food=[];
+   var ord="";
    for(var i=0;i<companyDet.length;i++)
   {  email[i]=companyDet[i].Email;
      orderid[i]=companyDet[i].orderNo;
@@ -508,15 +520,48 @@ router.post('/allOrders',(req,res) =>{
     status[i]="Approved";
     else if(companyDet[i].accepted==-1)
     status[i]="Declined";
+    if(companyDet[i].taken==0)
+    take[i]="Pending";
+    else if(companyDet[i].taken==1)
+    take[i]="Taken";
+    else if(companyDet[i].taken==-1)
+    take[i]="Declined";
+    for(var j=0;j<companyDet[i].Items.length;j++)
+    { if(ord=="")
+    {
+      ord=companyDet[i].Items[j][0]+"-"+companyDet[i].Items[j][1];
+    }
+    else
+    {
+      ord=ord+"\r\n"+companyDet[i].Items[j][0]+"-"+companyDet[i].Items[j][1];
+    }
+    }
+   food[i]=ord;
+
+
+ord="";
   }
-    res.render('admin',{email,orderid,amount,status});
+    res.render('admin',{email,orderid,amount,status,take,food});
   
 
 }).catch(err => console.log(err));
 });
+
+const sendStatus = ( email,orderNo,status1) => {
+  mailer3({
+    email,
+      orderNo,
+      status1
+    }, result => {
+      if (result && result.status == 1000) {
+        console.log("Status sent");
+       
+      }
+    });   
+}
  
 router.get('/AcceptOrder/:orderNo', (req,res)=>{
-  // console.log(req.params.orderNo);
+  var orderNo=req.params.orderNo;
   orderInfo.findOne({orderNo: req.params.orderNo})
   .exec((err,order)=>{
     if(err){
@@ -530,13 +575,25 @@ router.get('/AcceptOrder/:orderNo', (req,res)=>{
     if(order){
       order.accepted = 1;
       order.save();
-      res.status(200).send({message:'Success'});
+      var status1="Accepted";
+      let err=   sendStatus(order.Email,orderNo,status1)
+      if (err)
+            { 
+           
+             res.status(400).send({
+               status: false,
+               message: err });
+           }
+           else { 
+            res.status(200).send({message:'Success'});
+         }
+   
     }
   })
 })
 
 router.get('/DeclineOrder/:orderNo', (req,res)=>{
-  // console.log(req.params.orderNo);
+  var orderNo=req.params.orderNo;
   orderInfo.findOne({orderNo: req.params.orderNo})
   .exec((err,order)=>{
     if(err){
@@ -549,6 +606,59 @@ router.get('/DeclineOrder/:orderNo', (req,res)=>{
     }
     if(order){
       order.accepted = -1;
+      order.save();
+
+      var status1="Declined";
+      let err=   sendStatus(order.Email,orderNo,status1)
+      if (err)
+            { 
+           
+             res.status(400).send({
+               status: false,
+               message: err });
+           }
+           else { 
+            res.status(200).send({message:'Success'});
+         }
+   
+    }
+  })
+})
+
+router.get('/OrderTaken/:orderNo', (req,res)=>{
+  // console.log(req.params.orderNo);
+  orderInfo.findOne({orderNo: req.params.orderNo})
+  .exec((err,order)=>{
+    if(err){
+      res.status(404).send({message:err})
+      return;
+    }
+    if(!order){
+      res.status(404).send({message: 'Order not Found'})
+      return;
+    }
+    if(order){
+      order.taken = 1;
+      order.save();
+      res.status(200).send({message:'Success'});
+    }
+  })
+})
+
+router.get('/OrderNotTaken/:orderNo', (req,res)=>{
+  // console.log(req.params.orderNo);
+  orderInfo.findOne({orderNo: req.params.orderNo})
+  .exec((err,order)=>{
+    if(err){
+      res.status(404).send({message:err})
+      return;
+    }
+    if(!order){
+      res.status(404).send({message: 'Order not Found'})
+      return;
+    }
+    if(order){
+      order.taken = -1;
       order.save();
       res.status(200).send({message:'Success'});
     }

@@ -62,19 +62,33 @@ body, html {
       <tr>
         <th>SAP ID</th>
         <th>ORDER ID</th>
+        <th>ITEMS</th>
         <th>AMOUNT</th>
+        <th>DELIVERY STATUS</th>
       </tr>
+    </thead>
+    <tbody id="myTable">
       <% for(var i=0; i < email.length; i++) { if(status[i]=="Approved") {%> 
         <tr>
           <td><%=email[i]%></td>
           <td><%=orderid[i]%></td>
-  
+          <td><%=food[i]%></td>
           <td><%=amount[i]%></td>
-          
-        </tr>	
+          <td>
+            <% if(take[i]=="Pending") {%> 
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-primary" name="btn1" style="margin-right: 10px;" onclick="OrderTaken('<%=orderid[i]%>')">TAKEN</button>
+            <button type="button" class="btn btn-danger" name="btn2" onclick="OrderNotTaken('<%=orderid[i]%>')">NOT TAKEN</button>
+            </div>
+            <%}
+            else{
+            %>
+            <%=take[i]%>
+            <%}%>
+          </td>
+          </tr>	
         <%}}%>
-    </thead>
-    <tbody id="myTable">
+    
     </tbody>
   </table>
 </div>
@@ -88,8 +102,9 @@ body, html {
       <tr>
         <th>SAP ID</th>
         <th>ORDER ID</th>
+        <th>ITEMS</th>
         <th>AMOUNT</th>
-		<th>Status</th>
+		    <th>STATUS</th>
       </tr>
     </thead>
     <tbody id="myTable">
@@ -97,6 +112,7 @@ body, html {
         <tr>
           <td><%=email[i]%></td>
           <td><%=orderid[i]%></td>
+          <td><%=food[i]%></td>
           <td><%=amount[i]%></td>
           <td>
               <div class="btn-group" role="group" aria-label="Basic example">
@@ -119,8 +135,10 @@ body, html {
       <tr>
         <th>SAP ID</th>
         <th>ORDER ID</th>
+        <th>ITEMS</th>
         <th>AMOUNT</th>
-		<th>STATUS</th>
+    <th>ORDER STATUS</th>
+    <th>DELIVERY STATUS</th>
       </tr>
     </thead>
     <tbody id="myTable">
@@ -128,8 +146,10 @@ body, html {
         <tr>
           <td><%=email[i]%></td>
           <td><%=orderid[i]%></td>
+          <td><%=food[i]%></td>
           <td><%=amount[i]%></td>
           <td><%=status[i]%></td>
+          <td><%=take[i]%></td>
         </tr>	
         <%}%>
     </tbody>
@@ -155,6 +175,36 @@ function approveOrder(orderid){
   .then((res)=>{
     console.log(res.data.message);
     if(confirm('Order Accepted Successfully!')){
+    window.location.reload();  
+}
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+  console.log(orderid);
+}
+
+function OrderTaken(orderid){
+  // import axios from 'axios';
+  axios.get('http://localhost:3005/OrderTaken/'+orderid)
+  .then((res)=>{
+    console.log(res.data.message);
+    if(confirm('Order Taken Successfully!!')){
+    window.location.reload();  
+}
+  })
+  .catch((err)=>{
+    console.log(err);
+  })
+  console.log(orderid);
+}
+
+function OrderNotTaken(orderid){
+  // import axios from 'axios';
+  axios.get('http://localhost:3005/OrderNotTaken/'+orderid)
+  .then((res)=>{
+    console.log(res.data.message);
+    if(confirm('Order Not Taken!!')){
     window.location.reload();  
 }
   })

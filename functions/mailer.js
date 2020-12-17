@@ -74,6 +74,43 @@ const mailer2 = (data, cb) => {
     });
 };
 
-module.exports ={mailer,mailer2};
+const mailer3 = (data, cb) => {
+    let mailOptions = {
+        from: '"Panch Pandav" <' + mailSettings.auth.user + ">",
+        to: data.email,
+        subject: "Your Order Is "+data.status1,
+        html: "<h1>Hello</h1><p>Your Order is "+data.status1 +" and Your Order Number is : </p>"+data.orderNo
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+            cb({ status: 1001 });
+        } else {
+            cb({ status: 1000 });
+        }
+    });
+};
+
+const mailer4 = (data, cb) => {
+    let mailOptions = {
+        from: '"Panch Pandav" <' + mailSettings.auth.user + ">",
+        to: data.email,
+        subject: "Your Order Details",
+        html: "<h1>Hello</h1><p>Your Order Number is : </p><b><h2>" + data.otpVal + "</h2></b>" +"<p> And Your Items are : </p><b>" + data.Items + "</b>"+
+        "<p> And Total Amount is : Rs.<h3><b>" + data.price + "</h3></b></p>"
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+            cb({ status: 1001 });
+        } else {
+            cb({ status: 1000 });
+        }
+    });
+};
+
+module.exports ={mailer,mailer2,mailer3,mailer4};
 //module.exports=mailer2;
 

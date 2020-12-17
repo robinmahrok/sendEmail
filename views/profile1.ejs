@@ -16,24 +16,25 @@
 
 .row {
   display: flex;
+  
 }
 
 /* Create three equal columns that sits next to each other */
 .column {
-  flex: 33.33%;
+  flex: 50%;
   padding: 35px;
 }
   </style>
   <style>
 .container {
   position: relative;
-  width: 100%;
+  width: 50%;
 }
 
 .image {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 
 .overlay {
@@ -93,15 +94,17 @@ top:5px;
   <%=Email%>
 </label>
 </ul>
-  
 </nav>
 
  <div class="row">
+   <form action="/selectRestraw" method="POST">
   <div class="column">
     <div class="container">
-  <img src="img/food-court-logo.png" alt="Avatar" class="image" width="10">
+  <img src="img/food-court-logo.png" alt="Avatar" class="image" >
   <div class="overlay">
-    <div class="text"><a href="/foodcourt"><h1>Food Court</h1></a></div>
+    <div class="btn-group" role="group" aria-label="Basic example" >
+      <button type="submit" class="btn btn-primary" name="rest" value="Food Court" >Food Court</button>
+      </div>
   </div>
 </div>
   </div>
@@ -109,10 +112,13 @@ top:5px;
     <div class="container">
   <img src="img/barons-logo.png" alt="Avatar" class="image">
   <div class="overlay">
-    <div class="text"><a href="/barons"><h1>Barons</h1></a></div>
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <button type="submit" class="btn btn-primary" name="rest" value="Barons" >Barons</button>
+      </div>
   </div>
   </div>
 </div>
+</form>
 
 	<table style="background-color:#e5e5e5; width:100%; border-radius:9px">
 		<tr>
@@ -134,14 +140,5 @@ top:5px;
 			<td style = "color : brown; text-align : center; font-size : 13px; font-family : Arial, Helvetica, sans-serif;">Great Discounts<br />On Each Item</td>
 		</tr>
 	</table>
-
-
-
-
-
-
-
-
-
 </body>
 </html>
