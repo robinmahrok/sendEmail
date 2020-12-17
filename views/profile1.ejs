@@ -5,66 +5,53 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  
+ 
   <style>
-  * {
-  box-sizing: border-box;
-}
 
-.row {
-  display: flex;
-  
-}
-
-/* Create three equal columns that sits next to each other */
-.column {
-  flex: 50%;
-  padding: 35px;
-}
-  </style>
-  <style>
-.container {
-  position: relative;
-  width: 50%;
-}
+ .custombtn {
+   margin-top: 195px;
+   margin-left: 180px;
+   font-size: 32px;
+   padding: 15px;
+   
+ }
 
 .image {
   display: block;
-  width: 50%;
-  height: 50%;
+  width: 100%;
+  height: 100%;
 }
-
-.overlay {
+.overlay1 {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
   height: 100%;
-  width: 50%;
+  width: 100%;
   opacity: 0;
   transition: .5s ease;
   background-color: yellow;
 }
-
-.container:hover .overlay {
+.overlay2{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: yellow;
+}
+.overlay1:hover  {
+  opacity: 1;
+}
+.overlay2:hover{
   opacity: 1;
 }
 
-.text {
-  color: white;
-  font-size: 20px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
 .logoutLblPos{
 
 position:fixed;
@@ -85,7 +72,7 @@ top:5px;
   <!-- Brand/logo -->
   <a class="navbar-brand" href="#"><img src="img/logo.png" width="30" height="30" ></a>
 <ul>
-  <form align="right" name="form1" method="get" action="/">
+  <form name="form1" method="get" action="/">
     <label class="logoutLblPos">
     <input name="submit2" type="submit" id="submit2" value="Log out">
     </label>
@@ -95,28 +82,29 @@ top:5px;
 </label>
 </ul>
 </nav>
-
- <div class="row">
-   <form action="/selectRestraw" method="POST">
-  <div class="column">
-    <div class="container">
-  <img src="img/food-court-logo.png" alt="Avatar" class="image" >
-  <div class="overlay">
+<form action="/selectRestraw" method="POST">
+<div class="container">
+  <div class="row">
+      <div class="col-5">
+        <img src="img/food-court-logo.png" alt="Avatar" class="image" >
+  <div class="overlay1">
     <div class="btn-group" role="group" aria-label="Basic example" >
-      <button type="submit" class="btn btn-primary" name="rest" value="Food Court" >Food Court</button>
+      <button type="submit" class="btn btn-primary custombtn" name="rest" value="Food Court" >Food Court</button>
       </div>
   </div>
 </div>
-  </div>
-  <div class="column">
-    <div class="container">
-  <img src="img/barons-logo.png" alt="Avatar" class="image">
-  <div class="overlay">
+<div class="col-2">
+
+</div>
+  <div class="col-5">
+    <img src="img/barons-logo.png" alt="Avatar" class="image">
+    <div class="overlay2">
     <div class="btn-group" role="group" aria-label="Basic example">
-      <button type="submit" class="btn btn-primary" name="rest" value="Barons" >Barons</button>
+      <button type="submit" class="btn btn-primary custombtn" name="rest" value="Barons" >Barons</button>
       </div>
+    </div>
   </div>
-  </div>
+</div>
 </div>
 </form>
 
@@ -141,4 +129,7 @@ top:5px;
 		</tr>
 	</table>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </html>
