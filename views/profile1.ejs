@@ -6,9 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
  
-  <style>
+<style>
 
- .custombtn {
+ .custombtn1 {
+   margin-top: 195px;
+   margin-left: 150px;
+   font-size: 32px;
+   padding: 15px;
+   
+ }
+ .custombtn2 {
    margin-top: 195px;
    margin-left: 180px;
    font-size: 32px;
@@ -69,10 +76,10 @@ top:5px;
 <body>
 
 <nav class="navbar navbar-expand-sm bg-light navbar-light" >
-  <!-- Brand/logo -->
+
   <a class="navbar-brand" href="#"><img src="img/logo.png" width="30" height="30" ></a>
 <ul>
-  <form name="form1" method="get" action="/">
+  <form name="form1" method="get" action="/logout">
     <label class="logoutLblPos">
     <input name="submit2" type="submit" id="submit2" value="Log out">
     </label>
@@ -89,7 +96,7 @@ top:5px;
         <img src="img/food-court-logo.png" alt="Avatar" class="image" >
   <div class="overlay1">
     <div class="btn-group" role="group" aria-label="Basic example" >
-      <button type="submit" class="btn btn-primary custombtn" name="rest" value="Food Court" >Food Court</button>
+      <button type="submit" class="btn btn-primary custombtn1" name="rest" value="Food Court" >Food Court</button>
       </div>
   </div>
 </div>
@@ -100,7 +107,7 @@ top:5px;
     <img src="img/barons-logo.png" alt="Avatar" class="image">
     <div class="overlay2">
     <div class="btn-group" role="group" aria-label="Basic example">
-      <button type="submit" class="btn btn-primary custombtn" name="rest" value="Barons" >Barons</button>
+      <button type="submit" class="btn btn-primary custombtn2" name="rest" value="Barons" >Barons</button>
       </div>
     </div>
   </div>

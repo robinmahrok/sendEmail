@@ -49,7 +49,9 @@ body, html {
 </style>
 </head>
 <body>
-
+  <form name="form1" method="get" action="/logout">
+    <input name="submit2" type="submit" id="submit2" value="Go Back">
+  </form>
 <button class="tablink" onclick="openPage('CApproved', this, 'red')">CURRENT APPROVED</button>
 <button class="tablink" onclick="openPage('CPending', this, 'green')" id="defaultOpen">CURRENT PENDING</button>
 <button class="tablink" onclick="openPage('All', this, 'blue')">ALL ORDERS</button>
@@ -171,7 +173,7 @@ body, html {
 <script>
 function approveOrder(orderid){
   // import axios from 'axios';
-  axios.get('http://localhost:3005/AcceptOrder/'+orderid)
+  axios.get('https://foodcanteen.cf/AcceptOrder/'+orderid)
   .then((res)=>{
     console.log(res.data.message);
     if(confirm('Order Accepted Successfully!')){
@@ -186,7 +188,7 @@ function approveOrder(orderid){
 
 function OrderTaken(orderid){
   // import axios from 'axios';
-  axios.get('http://localhost:3005/OrderTaken/'+orderid)
+  axios.get('https://foodcanteen.cf/OrderTaken/'+orderid)
   .then((res)=>{
     console.log(res.data.message);
     if(confirm('Order Taken Successfully!!')){
@@ -201,7 +203,7 @@ function OrderTaken(orderid){
 
 function OrderNotTaken(orderid){
   // import axios from 'axios';
-  axios.get('http://localhost:3005/OrderNotTaken/'+orderid)
+  axios.get('https://foodcanteen.cf/OrderNotTaken/'+orderid)
   .then((res)=>{
     console.log(res.data.message);
     if(confirm('Order Not Taken!!')){
@@ -217,7 +219,7 @@ function OrderNotTaken(orderid){
 
 function declineOrder(orderid){
   // import axios from 'axios';
-  axios.get('http://localhost:3005/DeclineOrder/'+orderid)
+  axios.get('https://foodcanteen.cf/DeclineOrder/'+orderid)
   .then((res)=>{
     console.log(res.data.message);
     if(confirm('Order Declined Successfully!')){

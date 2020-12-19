@@ -312,11 +312,26 @@ else
 });
 //login api ends
 
+router.get('/logout',(req,res)=>{
+  req.session.destroy((err) => {
+    if(err) {
+        return console.log(err);
+    }
+    res.redirect('/');
+});
+})
+
 router.post('/selectRestraw',(req,res) =>{
   if(req.session.email1)
-  {
-    var rest=req.body.rest;
-    console.log(rest);
+  { 
+    req.session.rest=req.body.rest;
+           if(req.session.rest=="Food Court"){ 
+             res.redirect('/foodcourt');
+          }
+          else{
+            res.redirect('/barons');
+          }
+        
   }
   else{
     res.write('<h1>Your session is expired. Please login again to continue.</h1>');
@@ -354,7 +369,7 @@ orderInfo
 
 
 
-    orderInfo.create({Email : globalEmail , Items:fs, price: sum });
+    orderInfo.create({Email : globalEmail , Items:fs, price: sum , restrau:req.session.rest });
     sum=0;
     food=null;
 
@@ -372,7 +387,7 @@ orderInfo
          sum=sum+ parseInt(fs[i][1],10);
           //update verified in otpVerify
           console.log(fs);
-          orderInfo.updateOne({ Email: globalEmail }, { Items: fs , price: sum }, function (err, foodsent) 
+          orderInfo.updateOne({ Email: globalEmail }, { Items: fs , price: sum, restrau:req.session.rest }, function (err, foodsent) 
            {
           if (err)
            res.status(400).send({ status: false, message: "Unable to update User data" });
@@ -436,12 +451,13 @@ router.post('/orderno',(req,res) =>{
 })
 
 
-const sendOrderNo = ( recipient, otpVal,Items,price) => {
+const sendOrderNo = ( recipient, otpVal,Items,price,restraw) => {
   mailer2({
       email: recipient,
      otpVal,
      Items,
-     price
+     price,
+     restraw
     }, result => {
       if (result && result.status == 1000) {
         console.log("Otp Sent!");
@@ -473,11 +489,11 @@ router.post('/sendmail',(req,res) =>{
       ch=ch+",";
     }
   console.log(ch);
- let err=   sendOrderNo( email, companyDet[0].orderNo,ch,companyDet[0].price)
+ let err=   sendOrderNo( email, companyDet[0].orderNo,ch,companyDet[0].price,companyDet[0].restrau)
  if (err)
        { 
       
-        res.status(400).send({
+          res.status(400).send({
           status: false,
           message: err });
       }
@@ -670,41 +686,79 @@ router.get('/register', (req, res) =>{
     });
 
 router.get('/forgot', (req, res) =>{
-    res.render('forgot');
-    });
+  if( req.session.email1)
+  {   
+  res.render('forgot');
+  }
+  else res.redirect('/');
+
+});
 
 router.get('/otphtml', (req, res) =>{
-    res.render('otp');
+  if( req.session.email1)
+  {  
+  res.render('otp');
+}
+else res.redirect('/');
     });
 
 router.get('/otprevalid', (req, res) =>{
-    res.render('otpnotv');
-    });
+  if( req.session.email1)
+  {  
+  res.render('otpnotv');
+}
+else res.redirect('/');
+});
 
 router.get('/profile', (req, res) =>{
+  if( req.session.email1)
+  { 
     res.render('profile1',{Email:globalEmail});
+  }
+    else res.redirect('/');
+
     });
 
 router.get('/confirm', (req, res) =>{
-    res.render('confirmation',{Email:globalEmail});
+  if( req.session.email1)
+  {   
+  res.render('confirmation',{Email:globalEmail});
+  }
+  else res.redirect('/');
       });
   
 
 router.get('/barons', (req, res) =>{
+  if( req.session.email1)
+  { 
     res.render('baronsmenu',{Email:globalEmail});
+  }
+  else res.redirect('/');
     });
 
 router.get('/foodcourt', (req, res) =>{
+  if( req.session.email1)
+  { 
     res.render('foodcourtmenu',{Email:globalEmail});
+  }
+  else res.redirect('/');
    });
 
 
 router.get('/orders', (req, res) =>{
+  if( req.session.email1)
+  { 
     res.render('yourorders',{Email:globalEmail});
+  }
+  else res.redirect('/');
     });
 
 router.get('/yourprofile', (req, res) =>{
+  if( req.session.email1)
+  { 
     res.render('yourprofile',{Email:globalEmail});
+  }
+  else res.redirect('/');
     });
 
     
