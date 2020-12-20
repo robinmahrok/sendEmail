@@ -80,11 +80,11 @@ else{
 
 }
 else { //res.status(400).send({status:false , message:"Password does not met criteria"});
-res.redirect('/register');
+res.render('register-err-success',{success:0,message:"Password should contains atleast 6 characters consists of uppercase,lowercase,number and character"});
 }
 }
 else {//res.status(400).send({status:false , message:"Email does not met criteria"});
-res.redirect('/register');
+res.render('register-err-success',{success:0,message:"You have entered an invalid email address! Only college mail Id is allowed"});
 }
 
 } else {
