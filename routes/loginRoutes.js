@@ -300,13 +300,13 @@ if(!!passwordCheck(password))
  }
 else
  { error="";
-  res.render('index',{error});
+ res.render('index-err-success',{success:0,message:"Password should contains atleast 6 characters consists of uppercase,lowercase,number and character"});
    
  }
 }
 else
  {   error="";
-  res.render('index',{error});
+ res.render('index-err-success',{success:0,message:"You have entered an invalid email address! Only college mail Id is allowed"});
  
  }
 });
