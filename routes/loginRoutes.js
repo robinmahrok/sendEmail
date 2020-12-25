@@ -244,31 +244,16 @@ router.post('/login', (req,res) =>{
    if (req.body.email == null || typeof req.body.email == undefined || req.body.email.length == 0 ||
       req.body.password == null || typeof req.body.password == undefined || req.body.password.length == 0) {
         error="Enter email/password";
-      res.render('index',{error});
-      error="";
+        res.render('index-err-success',{success:0,message:"Fields can not be empty!"});
       }
 
 globalEmail=email;
-
-//password check with Minimum six characters, at least one uppercase letter, one lowercase letter, one number and one special character
-function passwordCheck (password1) {
-return (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/).test(password1)
-};
-
-function emailCheck (password1) {
-return (/^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/).test(password1)
-};
 var hashedpass=""
- error="Email/Password Incorrect";
-// checking email and password criteria
-if(!!emailCheck(email))
-{  
-if(!!passwordCheck(password))
-{
+
     studentInfo
     .find({ Email: email })
     .then(data => {
-      companyDet = data;
+      companyDet = data; 
       if (companyDet.length == 0) {
         res.render('index-err-success',{success:0,message:"User Not Found!!"});
       }
@@ -297,18 +282,7 @@ if(!!passwordCheck(password))
     })
    }
   })
- }
-else
- { error="";
- res.render('index-err-success',{success:0,message:"Password should contains atleast 6 characters consists of uppercase,lowercase,number and character"});
-   
- }
-}
-else
- {   error="";
- res.render('index-err-success',{success:0,message:"You have entered an invalid email address! Only college mail Id is allowed"});
  
- }
 });
 //login api ends
 
@@ -345,7 +319,6 @@ router.post('/SelectFood',(req,res) =>{
   {  
   var food=[];
    food=req.body.food;
-  
 globalEmail=req.session.email1;
    var fs=[];
 
@@ -366,8 +339,6 @@ orderInfo
        //Calculating total amount
        for(var i=0;i<fs.length;i++)
        sum=sum+ parseInt(fs[i][1],10);
-
-
 
     orderInfo.create({Email : globalEmail , Items:fs, price: sum , restrau:req.session.rest });
     sum=0;
@@ -411,7 +382,7 @@ orderInfo
 
 var ordernumber="";
 
-//verify OTP api
+//generate order number api
 router.post('/orderno',(req,res) =>{
   if( req.session.email1)
   {  
@@ -511,7 +482,7 @@ router.post('/sendmail',(req,res) =>{
 });
   
 
-//send Order No on Email
+//show all orders on frontend
 router.post('/allOrders',(req,res) =>{
  
   orderInfo

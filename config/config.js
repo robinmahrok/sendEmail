@@ -36,6 +36,7 @@ module.exports = {
        `/loginRoutes`
     ],
 
+    //serverUrl: ec2-3-84-149-36.compute-1.amazonaws.com
 
 
 };
