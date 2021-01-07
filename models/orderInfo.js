@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 let orderInfoSchema = new mongoose.Schema({
-Email: {
+Email : {
     type: String
 },
-Items: [[{
+Items : [[{
     type: String
 }]],
 price:{
@@ -15,11 +15,16 @@ taken :
     type:Number,
     default:0
 },
-restrau:
+restrau :
 {
-type:String
+    type:String
 },
-orderNo:
+shop :
+{
+    type:String,
+    default:"Annapurna"
+},
+orderNo :
 {
     type:String
 },

@@ -41,6 +41,14 @@ body, html {
   height: 100%;
 }
 
+.logoutLblPos{
+right:10px;
+top:5px;
+}
+.ema{
+right:100px;
+top:5px;
+}
 
 
 #CApproved {background-color: #FAFAD2;}
@@ -49,9 +57,14 @@ body, html {
 </style>
 </head>
 <body>
-  <form name="form1" method="get" action="/logout">
-    <input name="submit2" type="submit" id="submit2" value="Go Back">
-  </form>
+  <form name="form1" align="right" method="get" action="/logoutShopkeeper">
+		<label class="ema">
+			<%=EmailShop%>
+		  </label>
+		<label class="logoutLblPos">
+		<input name="submit2" type="submit" id="submit2" value="Log out">
+		</label>
+</form>
 <button class="tablink" onclick="openPage('CApproved', this, 'red')">CURRENT APPROVED</button>
 <button class="tablink" onclick="openPage('CPending', this, 'green')" id="defaultOpen">CURRENT PENDING</button>
 <button class="tablink" onclick="openPage('All', this, 'blue')">ALL ORDERS</button>
@@ -106,7 +119,7 @@ body, html {
         <th>ORDER ID</th>
         <th>ITEMS</th>
         <th>AMOUNT</th>
-		    <th>STATUS</th>
+		    <th>ORDER STATUS</th>
       </tr>
     </thead>
     <tbody id="myTable">

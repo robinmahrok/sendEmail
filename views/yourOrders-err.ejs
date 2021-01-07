@@ -74,24 +74,12 @@ top:5px;
         <th>ORDER ID</th>
         <th>ITEMS</th>
         <th>AMOUNT</th>
-        <th>RESTAURANT</th>
-        <th>SHOP</th>
         <th>ORDER STATUS</th>
         <th>DELIVERY STATUS</th>
       </tr>
     </thead>
     <tbody id="myTable">
-      <% for(var i=0; i < email.length; i++) { if(email[i]==Email) {%> 
-        <tr>
-          <td><%=orderid[i]%></td>
-          <td><%=food[i]%></td>
-          <td><%=amount[i]%></td>
-          <td><%=restraw[i]%></td>
-          <td><%=shop[i]%></td>
-          <td><%=status[i]%></td>
-          <td><%=deliveryStatus[i]%></td>
-          </tr>	
-        <%}}%>
+      <h3 color="red"> No Orders are placed till now. </h3>
     
     </tbody>
   </table>

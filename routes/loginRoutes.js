@@ -13,7 +13,14 @@ var JSAlert = require("js-alert");
 
 var error="";
 router.get('/', async (req, res) =>{
-res.render('index',{error});
+  req.session.destroy((err) => {
+    if(err) {
+        return console.log(err);
+    }
+    else 
+    res.render('index',{error});
+});
+
 });
 
 //signup api
@@ -237,6 +244,7 @@ router.post('/forgotPassword',(req,res) =>{
   
 // login api starts
 router.post('/login', (req,res) =>{
+
   error="";
   req.session.email1 = req.body.email;
     var email=req.body.email,
@@ -247,8 +255,8 @@ router.post('/login', (req,res) =>{
         res.render('index-err-success',{success:0,message:"Fields can not be empty!"});
       }
 
-globalEmail=email;
-var hashedpass=""
+  globalEmail=email;
+  var hashedpass=""
 
     studentInfo
     .find({ Email: email })
@@ -265,6 +273,7 @@ var hashedpass=""
         {
         if(otpver=="Verified")
         {
+          
           res.redirect('/profile');
          // res.status(200).send({status: true , message:"we will soon add homepage"})
         }
@@ -276,13 +285,11 @@ var hashedpass=""
       }
     else
     { 
-      res.render('index-err-success',{success:0,message:"Wrong Credentials!"});
-   
-  }
+      res.render('index-err-success',{success:0,message:"Wrong Credentials!"}); 
+    }
     })
    }
   })
- 
 });
 //login api ends
 
@@ -293,6 +300,12 @@ router.get('/logout',(req,res)=>{
     }
     res.redirect('/');
 });
+})
+
+router.get('/redirectShop',(req,res)=>{
+ 
+    res.render('indexShopkeeper');
+
 })
 
 router.post('/selectRestraw',(req,res) =>{
@@ -317,13 +330,14 @@ router.post('/selectRestraw',(req,res) =>{
 router.post('/SelectFood',(req,res) =>{
   if( req.session.email1)
   {  
-  var food=[];
+   var food=[];
    food=req.body.food;
-globalEmail=req.session.email1;
+   globalEmail=req.session.email1;
    var fs=[];
 
   if(Array.isArray(food))
-  { for(var i=0;i<food.length;i++)
+  { 
+    for(var i=0;i<food.length;i++)
     fs[i]=food[i].split(' ');
    }
    else  
@@ -335,21 +349,18 @@ orderInfo
   .then(data => {
     companyDet = data;
     if (companyDet.length == 0) {
-
-       //Calculating total amount
+      //Calculating total amount
        for(var i=0;i<fs.length;i++)
        sum=sum+ parseInt(fs[i][1],10);
 
     orderInfo.create({Email : globalEmail , Items:fs, price: sum , restrau:req.session.rest });
     sum=0;
     food=null;
-
     res.redirect('/confirm'); 
-    
     }
-    else{ if(companyDet[0].taken==0 && companyDet[0].accepted==1)
+    else{
+       if(companyDet[companyDet.length-1].taken==0 && companyDet[companyDet.length-1].accepted==1)
       {
-       
         res.render('rejectOrder',{Email:globalEmail})
       }
       else{
@@ -357,8 +368,7 @@ orderInfo
          for(var i=0;i<fs.length;i++)
          sum=sum+ parseInt(fs[i][1],10);
           //update verified in otpVerify
-          console.log(fs);
-          orderInfo.updateOne({ Email: globalEmail }, { Items: fs , price: sum, restrau:req.session.rest }, function (err, foodsent) 
+          orderInfo.create({Email : globalEmail , Items:fs, price: sum , restrau:req.session.rest }, function (err, foodsent) 
            {
           if (err)
            res.status(400).send({ status: false, message: "Unable to update User data" });
@@ -367,11 +377,10 @@ orderInfo
           sum=0;
           food=null;
           res.redirect('/confirm');
-        }
-              });
-            }
-      }    
-  
+         }
+        });
+       }
+    }    
 })
   }
   else{
@@ -481,176 +490,58 @@ router.post('/sendmail',(req,res) =>{
 
 });
   
-
-//show all orders on frontend
-router.post('/allOrders',(req,res) =>{
- 
-  orderInfo
-  .find({})
-  .then(data => {
-    companyDet = data;
-
-   var email=[];
-   var orderid=[];
-   var amount=[];
-   var status=[];
-   var take=[];
-   var food=[];
-   var ord="";
-   for(var i=0;i<companyDet.length;i++)
-  {  email[i]=companyDet[i].Email;
-     orderid[i]=companyDet[i].orderNo;
-    amount[i]=companyDet[i].price;
-    if(companyDet[i].accepted==0)
-    status[i]="Pending";
-    else if(companyDet[i].accepted==1)
-    status[i]="Approved";
-    else if(companyDet[i].accepted==-1)
-    status[i]="Declined";
-    if(companyDet[i].taken==0)
-    take[i]="Pending";
-    else if(companyDet[i].taken==1)
-    take[i]="Taken";
-    else if(companyDet[i].taken==-1)
-    take[i]="Declined";
-    for(var j=0;j<companyDet[i].Items.length;j++)
-    { if(ord=="")
+router.get('/yourProfileDash', (req, res) =>{
+  if(req.session.email1)
+  {
+  orderInfo.find({email:req.session.email1}).then(data=>{
+    if(data.length==0)
     {
-      ord=companyDet[i].Items[j][0]+"-"+companyDet[i].Items[j][1];
+      res.render('yourOrders-err');
     }
     else
     {
-      ord=ord+"\r\n"+companyDet[i].Items[j][0]+"-"+companyDet[i].Items[j][1];
-    }
-    }
-   food[i]=ord;
-
-
-ord="";
-  }
-    res.render('admin',{email,orderid,amount,status,take,food});
-  
-
-}).catch(err => console.log(err));
-});
-
-const sendStatus = ( email,orderNo,status1) => {
-  mailer3({
-    email,
-      orderNo,
-      status1
-    }, result => {
-      if (result && result.status == 1000) {
-        console.log("Status sent");
-       
+      var Email=req.session.email1;
+      var orderid = [];
+      var amount = [];
+      var status = [];
+      var deliveryStatus = [];
+      var restraw = [];
+      var shop = [];
+      var food = [];
+      var ord = "";
+      for (var i = 0; i < data.length; i++) {
+        orderid[i] = data[i].orderNo;
+        amount[i] = data[i].price;
+        status[i]=data[i].accepted;
+        restraw[i]=data[i].restrau;
+        shop[i]=data[i].shop;
+        deliveryStatus[i]=data[i].taken;
+        for (var j = 0; j < companyDet[i].Items.length; j++) {
+          if (ord == "") {
+            ord = data[i].Items[j][0] + "-" + data[i].Items[j][1];
+          } else {
+            ord =
+              ord +
+              "\r\n" +
+              data[i].Items[j][0] +
+              "-" +
+              data[i].Items[j][1];
+          }
+        }
+        food[i] = ord;
+        ord = "";
       }
-    });   
-}
+      res.render('yourorders',{orderid,amount,Email,status,restraw,shop,deliveryStatus,food});
+
+    }
+  })
  
-router.get('/AcceptOrder/:orderNo', (req,res)=>{
-  var orderNo=req.params.orderNo;
-  orderInfo.findOne({orderNo: req.params.orderNo})
-  .exec((err,order)=>{
-    if(err){
-      res.status(404).send({message:err})
-      return;
-    }
-    if(!order){
-      res.status(404).send({message: 'Order not Found'})
-      return;
-    }
-    if(order){
-      order.accepted = 1;
-      order.save();
-      var status1="Accepted";
-      let err=   sendStatus(order.Email,orderNo,status1)
-      if (err)
-            { 
-           
-             res.status(400).send({
-               status: false,
-               message: err });
-           }
-           else { 
-            res.status(200).send({message:'Success'});
-         }
-   
-    }
-  })
-})
-
-router.get('/DeclineOrder/:orderNo', (req,res)=>{
-  var orderNo=req.params.orderNo;
-  orderInfo.findOne({orderNo: req.params.orderNo})
-  .exec((err,order)=>{
-    if(err){
-      res.status(404).send({message:err})
-      return;
-    }
-    if(!order){
-      res.status(404).send({message: 'Order not Found'})
-      return;
-    }
-    if(order){
-      order.accepted = -1;
-      order.save();
-
-      var status1="Declined";
-      let err=   sendStatus(order.Email,orderNo,status1)
-      if (err)
-            { 
-           
-             res.status(400).send({
-               status: false,
-               message: err });
-           }
-           else { 
-            res.status(200).send({message:'Success'});
-         }
-   
-    }
-  })
-})
-
-router.get('/OrderTaken/:orderNo', (req,res)=>{
-  // console.log(req.params.orderNo);
-  orderInfo.findOne({orderNo: req.params.orderNo})
-  .exec((err,order)=>{
-    if(err){
-      res.status(404).send({message:err})
-      return;
-    }
-    if(!order){
-      res.status(404).send({message: 'Order not Found'})
-      return;
-    }
-    if(order){
-      order.taken = 1;
-      order.save();
-      res.status(200).send({message:'Success'});
-    }
-  })
-})
-
-router.get('/OrderNotTaken/:orderNo', (req,res)=>{
-  // console.log(req.params.orderNo);
-  orderInfo.findOne({orderNo: req.params.orderNo})
-  .exec((err,order)=>{
-    if(err){
-      res.status(404).send({message:err})
-      return;
-    }
-    if(!order){
-      res.status(404).send({message: 'Order not Found'})
-      return;
-    }
-    if(order){
-      order.taken = -1;
-      order.save();
-      res.status(200).send({message:'Success'});
-    }
-  })
-})
+  }
+  else{
+    res.write('<h1>Your session is expired. Please login again to continue.</h1>');
+    res.end('<a href='+'/'+'>Login</a>');
+  } 
+});
 
 router.get('/register', (req, res) =>{
     res.render('register');
@@ -733,9 +624,7 @@ router.get('/yourprofile', (req, res) =>{
     });
 
     
-router.get('/admin', (req, res) =>{
-  res.render('admin');
-  });
+
 
 module.exports = function (app) {
     app.use("/", router);

@@ -37,6 +37,7 @@ module.exports = {
     ],
 
     //serverUrl: ec2-3-84-149-36.compute-1.amazonaws.com
+    // create react app: npx create-react-app robin npm create-react-app robin
 
 
 };

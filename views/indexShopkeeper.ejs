@@ -15,36 +15,7 @@
 		  font-family: Arial;
 		}
 </style>	
-<script>
-	function ValidateEmail(email,password)
-	{
-		var mailformat = /^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/;
-		var passformat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@#$!%*?&]{6,}$/;
-		
-	if(email.value.match(mailformat))
-	{
-		if(password.value.match(passformat))
-		{
-			let response = fetch('/login');
-			console.log(response);
-			document.form1.text1.focus();
-			return true;
-		}
-		else
-		{
-			alert("Password should contains atleast 6 characters consists of uppercase,lowercase,number and character");
-		 document.form1.text1.focus();
-		 return false;
-		}
-	}
-	else
-	{
-	alert("You have entered an invalid email address!");
-	document.form1.text1.focus();
-	return false;
-	}
-	}
-		</script>	
+
 </head>
 
 <body class="my-login-page">
@@ -57,15 +28,10 @@
 					</div>
 					<div class="card fat">
 						<div class="card-body">
-                            <% if(success==0 || success==1)
-                            {
-                                %>
-                                <div class="alert alert-danger"> <%=message%></div>
-                                <%}
-                             %>
-							<h2 class="card-title">Welcome!!</h2>
+							
+							<h2 class="card-title">Welcome to Shopkeeper Panel!!</h2>
 							<h4>Login</h4>
-							<form method="POST" class="my-login-validation" name="form2" action="/login" >
+							<form method="POST" class="my-login-validation" name="form2" action="/loginShopkeeper" >
 								<div class="form-group">
 									<label for="email">E-Mail Address</label>
 									<input id="email" type="email" class="form-control" name="email" required autofocus>
@@ -91,22 +57,16 @@
 								</div>
 
 								<div class="form-group m-0">
-									<button type="submit" class="btn btn-primary btn-block" onclick="return ValidateEmail(document.form2.email,document.form2.password)">
+									<button type="submit" class="btn btn-primary btn-block" >
 										Login
 									</button>
 								</div>
 								<div class="mt-4 text-center">
-									Don't have an account? <a href="/register">Create One</a>
+									Don't have an account? Contact Us at yaassmobileapp@gmail.com
 								</div>
 								
 							</form>
-							<form name="form1" method="post" action="/allOrders">
-								<div class="form-group m-0">
-									<button type="submit" class="btn btn-primary btn-block" width="20px" height="15px">
-									   Click Here for Shopkeeper panel
-									</button>
-								</div>
-							  </form>
+							
 						</div>
 					</div>
 					
