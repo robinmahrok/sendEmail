@@ -61,7 +61,7 @@ const mailer2 = (data, cb) => {
         to: data.email,
         subject: "Your Order Details",
         html: "<h1>Greetings from "+data.restraw+"</h1><p>Your Order Number is : </p><b><h2>" + data.otpVal + "</h2></b>" +"<p> And Your Items are : </p><b>" + data.Items + "</b>"+
-        "<p> And Total Amount is : Rs.<h3><b>" + data.price + "</h3></b></p>"
+        "<p> And Total Amount is : Rs.<b>" + data.price + "</b></p>"
     };
   
     transporter.sendMail(mailOptions, (error, info) => {

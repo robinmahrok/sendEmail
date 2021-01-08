@@ -2,6 +2,8 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
 <style>
 body {
   font-family: "Lato", sans-serif;
@@ -53,6 +55,12 @@ position:fixed;
 right:100px;
 top:5px;
 }
+
+.newtable {
+    margin-left: 600px;
+    margin-top: 100px;
+    color: red;
+}
 </style>
 </head>
 <body>
@@ -66,32 +74,20 @@ top:5px;
   <%=Email%>
 </label>
 
-<div class="container">
+<div class="container newtable">
  
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr>
-        <th>ORDER ID</th>
-        <th>ITEMS</th>
-        <th>AMOUNT</th>
-        <th>ORDER STATUS</th>
-        <th>DELIVERY STATUS</th>
-      </tr>
-    </thead>
-    <tbody id="myTable">
-      <h3 color="red"> No Orders are placed till now. </h3>
+      <h1 color="red"> No Orders are placed till now. </h1>
+     
+      <form method="get" action="/profile">
+        <div class="btn-group" role="group" aria-label="Basic example" >
+          <button type="submit" class="btn btn-primary" name="rest" >Click Here</button>
+          </div>
+          to go back and Order Something!!
+      </form>
     
-    </tbody>
-  </table>
 </div>
 
-<div class="sidenav">
-  <a href="#contact">ALL</a>
-  <a href="#about">THIS MONTH</a>
-  <a href="#services">LAST MONTH</a>
-  <a href="#clients">INCOMPLETE</a>
-  
-</div>
+
 
 <div class="main">
   </div>

@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body {
   font-family: "Lato", sans-serif;
 }
-
+.con {
+  margin-top: 60px;
+}
 .sidenav {
   height: 100%;
   width: 160px;
@@ -53,6 +60,9 @@ position:fixed;
 right:100px;
 top:5px;
 }
+.btnn{
+  margin-left: auto;
+}
 </style>
 </head>
 <body>
@@ -66,9 +76,9 @@ top:5px;
   <%=Email%>
 </label>
 
-<div class="container">
+<div class="container con">
  
-  <table class="table table-bordered table-striped">
+  <table class="table table-bordered table-striped" border="5">
     <thead>
       <tr>
         <th>ORDER ID</th>
@@ -81,7 +91,7 @@ top:5px;
       </tr>
     </thead>
     <tbody id="myTable">
-      <% for(var i=0; i < email.length; i++) { if(email[i]==Email) {%> 
+      <% for(var i=0; i < orderid.length; i++) {%> 
         <tr>
           <td><%=orderid[i]%></td>
           <td><%=food[i]%></td>
@@ -91,19 +101,18 @@ top:5px;
           <td><%=status[i]%></td>
           <td><%=deliveryStatus[i]%></td>
           </tr>	
-        <%}}%>
+        <%}%>
     
     </tbody>
   </table>
 </div>
 
-<div class="sidenav">
-  <a href="#contact">ALL</a>
-  <a href="#about">THIS MONTH</a>
-  <a href="#services">LAST MONTH</a>
-  <a href="#clients">INCOMPLETE</a>
-  
-</div>
+
+<form method="get" action="/profile">
+  <div class="btn-group btnn" role="group" aria-label="Basic example" >
+    <button type="submit" class="btn btn-primary" name="rest" >Go Back</button>
+    </div>
+</form>
 
 <div class="main">
   </div>

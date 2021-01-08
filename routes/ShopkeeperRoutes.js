@@ -1,6 +1,7 @@
-// const express = require("express");
+// let express = require("express");
 const studentInfo = require("../models/studentInfo");
-var mailer = require("../functions/mailer");
+var {mailer} = require('../functions/mailer');
+var {mailer2,mailer3,mailer4} = require('../functions/mailer');
 var utils = require("../functions/utils");
 const { models } = require("mongoose");
 // router = express.Router();

@@ -186,7 +186,7 @@ top:5px;
 <script>
 function approveOrder(orderid){
   // import axios from 'axios';
-  axios.get('https://foodcanteen.cf/AcceptOrder/'+orderid)
+  axios.get('http://localhost:3005/AcceptOrder/'+orderid)
   .then((res)=>{
     console.log(res.data.message);
     if(confirm('Order Accepted Successfully!')){
@@ -201,7 +201,7 @@ function approveOrder(orderid){
 
 function OrderTaken(orderid){
   // import axios from 'axios';
-  axios.get('https://foodcanteen.cf/OrderTaken/'+orderid)
+  axios.get('http://localhost:3005/OrderTaken/'+orderid)
   .then((res)=>{
     console.log(res.data.message);
     if(confirm('Order Taken Successfully!!')){
@@ -216,7 +216,7 @@ function OrderTaken(orderid){
 
 function OrderNotTaken(orderid){
   // import axios from 'axios';
-  axios.get('https://foodcanteen.cf/OrderNotTaken/'+orderid)
+  axios.get('http://localhost:3005/OrderNotTaken/'+orderid)
   .then((res)=>{
     console.log(res.data.message);
     if(confirm('Order Not Taken!!')){
@@ -232,7 +232,7 @@ function OrderNotTaken(orderid){
 
 function declineOrder(orderid){
   // import axios from 'axios';
-  axios.get('https://foodcanteen.cf/DeclineOrder/'+orderid)
+  axios.get('http://localhost:3005/DeclineOrder/'+orderid)
   .then((res)=>{
     console.log(res.data.message);
     if(confirm('Order Declined Successfully!')){

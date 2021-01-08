@@ -1,4 +1,4 @@
-// const express = require("express");
+// let express = require("express");
 const studentInfo = require('../models/studentInfo');
 var {mailer} = require('../functions/mailer');
 var {mailer2,mailer3,mailer4} = require('../functions/mailer');
@@ -326,6 +326,21 @@ module.exports = function(router){
       res.end('<a href='+'/'+'>Login</a>');
     }
   })
+
+    //generate order number api
+  
+      function f(){
+      var text = "";
+      var char_list =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+       
+      for (var i = 0; i < 10; i++) {
+        text += char_list.charAt(Math.floor(Math.random() * char_list.length));
+      }
+     return text;
+            }
+           
+          
   
   //select food api
   router.post('/SelectFood',(req,res) =>{
@@ -335,7 +350,7 @@ module.exports = function(router){
      food=req.body.food;
      globalEmail=req.session.email1;
      var fs=[];
-  
+  Email=globalEmail
     if(Array.isArray(food))
     { 
       for(var i=0;i<food.length;i++)
@@ -353,11 +368,13 @@ module.exports = function(router){
         //Calculating total amount
          for(var i=0;i<fs.length;i++)
          sum=sum+ parseInt(fs[i][1],10);
-  
-      orderInfo.create({Email : globalEmail , Items:fs, price: sum , restrau:req.session.rest });
+  var ordernum=f();
+  console.log(ordernum);
+      orderInfo.create({Email : globalEmail , Items:fs, price: sum , restrau:req.session.rest , orderNo:ordernum });
       sum=0;
       food=null;
-      res.redirect('/confirm'); 
+      res.render('thanks',{ordernum,Email});
+      ordernum="";
       }
       else{
          if(companyDet[companyDet.length-1].taken==0 && companyDet[companyDet.length-1].accepted==1)
@@ -368,8 +385,10 @@ module.exports = function(router){
            //sending data in database
            for(var i=0;i<fs.length;i++)
            sum=sum+ parseInt(fs[i][1],10);
+           var ordernum=f();
+           console.log(ordernum);
             //update verified in otpVerify
-            orderInfo.create({Email : globalEmail , Items:fs, price: sum , restrau:req.session.rest }, function (err, foodsent) 
+            orderInfo.create({Email : globalEmail , Items:fs, price: sum , restrau:req.session.rest , orderNo:ordernum }, function (err, foodsent) 
              {
             if (err)
              res.status(400).send({ status: false, message: "Unable to update User data" });
@@ -377,7 +396,7 @@ module.exports = function(router){
            {  
             sum=0;
             food=null;
-            res.redirect('/confirm');
+            res.render('thanks',{ordernum,Email});
            }
           });
          }
@@ -392,44 +411,7 @@ module.exports = function(router){
   
   var ordernumber="";
   
-  //generate order number api
-  router.post('/orderno',(req,res) =>{
-    if( req.session.email1)
-    {  
-      globalEmail=req.session.email1;
-    function f(){
-    var text = "";
-    var char_list =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-     
-    for (var i = 0; i < 10; i++) {
-      text += char_list.charAt(Math.floor(Math.random() * char_list.length));
-    }
-    ordernumber=text;
-    console.log(text);
-    orderInfo
-    .find({ orderNo: text })
-    .then(data => {
-      companyDet = data;
-            //update ordernumber in database
-            orderInfo.updateOne({ Email: globalEmail }, { orderNo:text }, function (err, otpVerified) 
-             {
-            if (err)
-             res.status(400).send({ status: false, message: "Unable to update User data" });
-            else 
-            res.render('thanks',{Email:globalEmail,orderNo:text});
-                });
-  
-            })
-          }
-          f();
-        }
-        else
-        {
-          res.write('<h1>Your session is expired. Please login again to continue.</h1>');
-          res.end('<a href='+'/'+'>Login</a>');
-        }
-  })
+
   
   
   const sendOrderNo = ( recipient, otpVal,Items,price,restraw) => {
@@ -457,7 +439,7 @@ module.exports = function(router){
     .find({ Email: globalEmail })
     .then(data => {
       companyDet = data;
-      var it=companyDet[0].Items;
+      var it=companyDet[companyDet.length-1].Items;
       var ch="";
       for(var i=0;i<it.length;i++)
       {
@@ -470,7 +452,7 @@ module.exports = function(router){
         ch=ch+",";
       }
     console.log(ch);
-   let err=   sendOrderNo( email, companyDet[0].orderNo,ch,companyDet[0].price,companyDet[0].restrau)
+   let err=   sendOrderNo( email, companyDet[companyDet.length-1].orderNo,ch,companyDet[companyDet.length-1].price,companyDet[companyDet.length-1].restrau)
    if (err)
          { 
         
@@ -494,14 +476,16 @@ module.exports = function(router){
   router.get('/yourProfileDash', (req, res) =>{
     if(req.session.email1)
     {
-    orderInfo.find({email:req.session.email1}).then(data=>{
-      if(data.length==0)
+      var Email=req.session.email1;
+    orderInfo.find({Email:req.session.email1}).then(data=>{
+      com=data;
+      if(com.length==0)
       {
-        res.render('yourOrders-err');
+        res.render('yourOrders-err',{Email});
       }
       else
       {
-        var Email=req.session.email1;
+        
         var orderid = [];
         var amount = [];
         var status = [];
@@ -511,22 +495,28 @@ module.exports = function(router){
         var food = [];
         var ord = "";
         for (var i = 0; i < data.length; i++) {
-          orderid[i] = data[i].orderNo;
-          amount[i] = data[i].price;
-          status[i]=data[i].accepted;
-          restraw[i]=data[i].restrau;
-          shop[i]=data[i].shop;
-          deliveryStatus[i]=data[i].taken;
-          for (var j = 0; j < companyDet[i].Items.length; j++) {
+          orderid[i] = com[i].orderNo;
+          amount[i] = com[i].price;
+          status[i]=com[i].accepted;
+          restraw[i]=com[i].restrau;
+          shop[i]=com[i].shop;
+          deliveryStatus[i]=com[i].taken;
+          if (com[i].accepted == 0) status[i] = "Pending";
+          else if (com[i].accepted == 1) status[i] = "Approved";
+          else if (com[i].accepted == -1) status[i] = "Declined";
+          if (com[i].taken == 0) deliveryStatus[i] = "Pending";
+          else if (com[i].taken == 1) deliveryStatus[i] = "Taken";
+          else if (com[i].taken == -1) deliveryStatus[i] = "Declined";
+          for (var j = 0; j < com[i].Items.length; j++) {
             if (ord == "") {
-              ord = data[i].Items[j][0] + "-" + data[i].Items[j][1];
+              ord = com[i].Items[j][0] + "-" + com[i].Items[j][1];
             } else {
               ord =
                 ord +
                 "\r\n" +
-                data[i].Items[j][0] +
+                com[i].Items[j][0] +
                 "-" +
-                data[i].Items[j][1];
+                com[i].Items[j][1];
             }
           }
           food[i] = ord;
