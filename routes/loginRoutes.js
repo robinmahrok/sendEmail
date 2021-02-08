@@ -44,7 +44,7 @@ module.exports = function(router){
     };
   
     function emailCheck (password1) {
-      return (/^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@stu.upes.ac.in$/).test(password1)
+      return (/^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/).test(password1)
     };
     var hashedpass=""
   
