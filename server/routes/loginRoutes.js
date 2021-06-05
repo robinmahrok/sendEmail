@@ -75,8 +75,7 @@ module.exports = function (router) {
 
     sendReceipt(
       email,
-      billerId,
-      customerName,
+   
       receipt,
       subject,
       message,
@@ -93,8 +92,7 @@ module.exports = function (router) {
 
   const sendReceipt = (
     email,
-    billerId,
-    customerName,
+  
     receipt,
     subject,
     message,
@@ -103,8 +101,6 @@ module.exports = function (router) {
     mailer2(
       {
         email,
-        billerId,
-        customerName,
         receipt,
         subject,
         message,
