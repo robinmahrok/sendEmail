@@ -29,9 +29,15 @@ export default function FileUpload() {
     e.preventDefault();
     setMessage(e.target.value);
   };
+  const clearAttachment = (e) => {
+    setFile();
+    setFileName("");
+
+  };
   const handleOnChangeFile = (e) => {
     console.log(e.target.files[0]);
     setProgress(true);
+    setTick(false);
     setTimeout(() => setCompleted(60), 500);
     setFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
@@ -77,17 +83,18 @@ export default function FileUpload() {
         rel="stylesheet"
         href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        crossorigin="anonymous"
+        crossOrigin="anonymous"
       />
+      <div>
         <form>
           
-          <img src="https://zohowebstatic.com/sites/default/files/ogimage/mail-logo.png" width="100px" height="100px"></img>
+          <img src="https://zohowebstatic.com/sites/default/files/ogimage/mail-logo.png" alt="Smart Mail" width="100px" height="100px"></img>
           <br></br>
          <br></br>
          <h2>Smart Email</h2>
           <br></br>
           <label>Receiver's Email : </label>
-          <input
+          <input style={{borderRadius:"7px"}}
             type="email"
             placeholder="Receiver's Email"
             name="receiverEmail"
@@ -100,6 +107,7 @@ export default function FileUpload() {
           <label>Subject : </label>
           <input
             type="text"
+            style={{borderRadius:"7px"}}
             placeholder="Subject"
             onChange={handleOnChangeSubject}
             value={subject}
@@ -110,6 +118,7 @@ export default function FileUpload() {
           <label>Message : </label>
           <textarea
             placeholder="Message"
+            style={{borderRadius:"7px"}}
             rows="4"
             cols="50"
             onChange={handleOnChangeMessage}
@@ -122,10 +131,11 @@ export default function FileUpload() {
           <label>Attachment : </label>
           <input
             type="file"
+            style={{borderRadius:"7px"}}
             name="fileToUpload"
             id="fileToUpload"
             onChange={handleOnChangeFile}
-          />  {tick && <span>&#10003;</span>}
+          />  {tick && <span>&#10003;</span>} 
           <div style={{width:"200px", marginLeft:"30%"}}>
          {progress&& <ProgressBar now={completed} label={`${completed}%`}/>}
         
@@ -133,13 +143,16 @@ export default function FileUpload() {
          </div>
           <br />
           <br />
-          <button className="button" onClick={fileUpload}>
+          <button style={{marginLeft:"10%"}} className="btn btn-info" onClick={clearAttachment}> Clear </button>
+       
+          <button style={{marginLeft:"20%"}} className="btn btn-success" onClick={fileUpload}>
       Send
       {load && <Spinner animation="border" variant="primary">
         </Spinner>}
          
       </button>
         </form>
+        </div>
       </header>
     </div>
   );
