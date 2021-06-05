@@ -2,9 +2,12 @@ const express = require('express');
 const Mongoose = require('mongoose');
 const routes = require('./routes/index.js');
 var bodyParser = require('body-parser');
-const app = express();
+var cors = require("cors");
+//const fileupload = require("express-fileupload");
 
-  app.use(express.urlencoded({extended: false}));
+const app = express();
+app.use(cors());
+app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(bodyParser.json({ limit: '50mb', extended: true }))
 app.use(express.static("public"));
