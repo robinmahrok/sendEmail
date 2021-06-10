@@ -70,4 +70,24 @@ const mailer2 = (data, cb) => {
   });
 };
 
-module.exports = { mailer, mailer2 };
+const mailer3 = (data, cb) => {
+  let mailOptions = {
+    from: '"Smart Mail" <' + mailSettings.auth.user + ">",
+    to: data.email,
+    subject: "" + data.subject,
+    html: data.message
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      cb({ status: 1001 });
+    } else {
+      console.log(mailOptions);
+
+      cb({ status: 1000 });
+    }
+  });
+};
+
+module.exports = { mailer, mailer2,mailer3 };

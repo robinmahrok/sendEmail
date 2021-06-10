@@ -1,5 +1,5 @@
 // let express = require("express");
-var { mailer, mailer2 } = require("../functions/mailer");
+var { mailer, mailer2,mailer3 } = require("../functions/mailer");
 var multer = require("multer");
 var storage = multer.diskStorage({
   destination: __dirname + "\\uploads\\",
@@ -72,10 +72,10 @@ module.exports = function (router) {
 
     //Attachment
     var receipt = req.files[0];
-
+if(req.files[0])
+{
     sendReceipt(
       email,
-   
       receipt,
       subject,
       message,
@@ -88,11 +88,27 @@ module.exports = function (router) {
         } else res.status(200).send({ status: true, message: "Sent" });
       }
     );
+}
+else {
+  sendReceipt2(
+    email,
+    subject,
+    message,
+    (err, updatedUser) => {
+      if (err) {
+        res.status(400).send({
+          status: false,
+          message: err,
+        });
+      } else res.status(200).send({ status: true, message: "Sent" });
+    }
+  );
+}
   });
+
 
   const sendReceipt = (
     email,
-  
     receipt,
     subject,
     message,
@@ -102,6 +118,29 @@ module.exports = function (router) {
       {
         email,
         receipt,
+        subject,
+        message,
+      },
+      (result) => {
+        if (result && result.status == 1000) {
+          console.log("Otp Sent!");
+          callback(null);
+        } else {
+          callback("Unable to send OTP through email", null);
+        }
+      }
+    );
+  };
+
+  const sendReceipt2 = (
+    email,
+    subject,
+    message,
+    callback
+  ) => {
+    mailer3(
+      {
+        email,
         subject,
         message,
       },
